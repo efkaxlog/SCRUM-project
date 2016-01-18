@@ -42,8 +42,14 @@ public class HeatFluxSensor extends Sensor {
 	}
 	
 	public void printDetails() {
+		System.out.println("-------------------------");
 		System.out.println("Class: " + getClass().getSimpleName());
 		super.printDetails();
+		System.out.println("Heat Flux Temperature: " + heatFluxTemp);
+		System.out.println("Internal Wall Surface Temperature: " 
+							+ internalWallSurfaceTemp);
+		System.out.println("Internal Air Temperature: " + internalAirTemp);
+		
 	}
 
 }

@@ -33,9 +33,11 @@ public class ExternalTempSensor extends Sensor {
 	}
 	
 	public void printDetails() {
+		System.out.println("-------------------------");
 		System.out.println("Class: " + getClass().getSimpleName());
 		super.printDetails();
 		System.out.println("External Surface Temperature: " + externalSurfaceTemp);
+		System.out.println("External Air Temperature: " + externalAirTemp);
 		
 	}
 

@@ -22,8 +22,10 @@ public class AirTempSensor extends Sensor {
 	}
 	
 	public void printDetails() {
+		System.out.println("-------------------------");
 		System.out.println("Class: " + getClass().getSimpleName());
 		super.printDetails();
+		System.out.println("Air Temperature: " + airTemp);
 	}
 
 }

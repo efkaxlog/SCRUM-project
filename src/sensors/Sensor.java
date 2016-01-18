@@ -52,11 +52,10 @@ public class Sensor {
 	 */
 	protected void printDetails() {
 		System.out.printf("ID: %s\n"
-						+ "Name: %s"
-						+ "Type: %s"
-						+ "Timestamp: %s",
+						+ "Name: %s\n"
+						+ "Type: %s\n"
+						+ "Timestamp: %s\n",
 						sensorID, sensorName, sensorType, timestamp.toString());
-						
 	}
 
 }
