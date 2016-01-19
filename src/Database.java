@@ -40,8 +40,10 @@ public class Database
 		}
 	}
 	
-	private void addSensor(Sensor sensor) throws SQLException 
+	public void addSensor(Sensor sensor) 
 	{
+		try
+		{
 		if(sensor instanceof ExternalTempSensor) 
 		{
 			insertIntoExtTemp((ExternalTempSensor) sensor);
@@ -53,6 +55,10 @@ public class Database
 		else if(sensor instanceof HeatFluxSensor)
 		{
 			insertIntoHeatFlux((HeatFluxSensor) sensor);
+		}
+		} catch(SQLException e)
+		{
+			e.printStackTrace();
 		}
 	}
 	

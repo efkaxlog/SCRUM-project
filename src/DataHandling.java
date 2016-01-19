@@ -11,26 +11,22 @@ public class DataHandling
 	
 	public ArduinoConnector arduino;
 	//Connection connection;
-	String dataString;
+	Database database;
 
 	public DataHandling()
 	{
-		
-		
-		//Needs to be uncommented when classes are added.
-		//connection = new Connection();
-		 
+		database = new Database();
 	}
 	
-	public void handleObject()
+	public void handleObject(String dataString)
 	{
-		//dataString = connection.getStream();
+		Sensor sensor;
 		
 		////temp string to simulate data from arduino
 		dataString = "10,Temp,Int Temp,27,89,29,65";
 		
-		parseString(dataString);
-		
+		sensor = parseString(dataString);
+		database.addSensor(sensor);
 		
 	}
 	
@@ -92,6 +88,7 @@ public class DataHandling
 	}
 	
 	public static void recieveDataString(String data) {
+		//handleObject(data);
 		System.out.println("Data handling\n__________");
 		System.out.println(data);
 	}
