@@ -2,19 +2,17 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import sensors.*;
 
+import sensors.*;
 
 public class Database 
 {
 	static Connection connection;
 	
-	public Database(Sensor sensor) 
+	public Database()
 	{
-		sortSensors(sensor);
+		
 	}
 	
 	//connection
@@ -29,29 +27,7 @@ public class Database
 		{
 			Class.forName(DRIVER_CLASS);
 			connection = DriverManager.getConnection(url, user, pass);
-			//use for returning not needed here
-/*			Statement statement = connection.createStatement();
-			ResultSet results = statement.executeQuery("SELECT * FROM UserList");
-			while(results.next())
-			{
-				//data from ssp database - change to SPAT
-				String username = results.getString("Username");
-				String password = results.getString("Password");
-				String address = results.getString("Address");
-				String mobile = results.getString("Mobile");
-				String city = results.getString("City");
-				//show database results
-				System.out.println("User: " + username);
-				System.out.println("Pass: " + password);
-				System.out.println("Address: " + address);
-				System.out.println("City: " + city);
-				System.out.println("Mobile: " + mobile);
-				System.out.println();
-			}
-			results.close();
-			statement.close();
-			connection.close();
-		}*/
+		}
 		catch (SQLException sqlException)
 		{
 			sqlException.printStackTrace();
@@ -64,58 +40,58 @@ public class Database
 		}
 	}
 	
-	private void sortSensors(Sensor sensor) 
+	private void addSensor(Sensor sensor) throws SQLException 
 	{
 		if(sensor instanceof ExternalTempSensor) 
 		{
-			insertIntoExtTemp(sensor);
+			insertIntoExtTemp((ExternalTempSensor) sensor);
 		} 
 		else if(sensor instanceof AirTempSensor) 
 		{
-			insertIntoAirTemp(sensor);
+			insertIntoAirTemp((AirTempSensor) sensor);
 		} 
 		else if(sensor instanceof HeatFluxSensor)
 		{
-			insertIntoHeatFlux(sensor);
+			insertIntoHeatFlux((HeatFluxSensor) sensor);
 		}
 	}
 	
-	private void insertIntoHeatFlux(Sensor sensor)
+	private void insertIntoHeatFlux(HeatFluxSensor sensor) throws SQLException
 	{
 		String sql = "INSERT INTO Heat_Flux_Sensor VALUES (?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
 		ps.setString(3, sensor.getSensorName());
-		ps.setString(4, sensor.getTimestamp());
-		ps.setString(5, sensor.getHeatFluxTemp());
-		ps.setString(6, sensor.getInternalAirTemp());
-		ps.setString(7, sensor.getInternalWallSurfaceTemp());
+		ps.setTimestamp(4, sensor.getTimestamp());
+		ps.setFloat(5, sensor.getHeatFluxTemp());
+		ps.setFloat(6, sensor.getInternalAirTemp());
+		ps.setFloat(7, sensor.getInternalWallSurfaceTemp());
 		ps.executeUpdate();
 	}
 	
-	private void insertIntoExtTemp(Sensor sensor)
+	private void insertIntoExtTemp(ExternalTempSensor sensor) throws SQLException
 	{
 		String sql = "INSERT INTO External_Temp_Sensor VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
 		ps.setString(3, sensor.getSensorName());
-		ps.setString(4, sensor.getTimestamp());
-		ps.setString(5, sensor.getExternalSurfaceTemp());
-		ps.setString(6, sensor.getExternalAirTemp());
+		ps.setTimestamp(4, sensor.getTimestamp());
+		ps.setFloat(5, sensor.getExternalSurfaceTemp());
+		ps.setFloat(6, sensor.getExternalAirTemp());
 		ps.executeUpdate();
 	}
 	
-	private void insertIntoAirTemp(Sensor sensor)
+	private void insertIntoAirTemp(AirTempSensor sensor) throws SQLException
 	{
 		String sql = "INSERT INTO Air_Temp_Sensor(?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
 		ps.setString(3, sensor.getSensorName());
-		ps.setString(4, sensor.getTimestamp());
-		ps.setString(5, sensor.getAirTemp());
+		ps.setTimestamp(4, sensor.getTimestamp());
+		ps.setFloat(5, sensor.getAirTemp());
 		ps.executeUpdate();
 	}
 }
