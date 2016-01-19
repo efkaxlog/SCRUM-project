@@ -2,7 +2,7 @@ package sensors;
 
 import java.sql.Timestamp;
 
-public class Sensor {
+abstract public class Sensor {
 	
 	private String sensorID, sensorName, sensorType; 
 	private Timestamp timestamp;
@@ -15,42 +15,42 @@ public class Sensor {
 		this.timestamp = timestamp;
 	}
 
-	protected String getSensorID() {
+	public String getSensorID() {
 		return sensorID;
 	}
 
-	protected void setSensorID(String sensorID) {
+	public void setSensorID(String sensorID) {
 		this.sensorID = sensorID;
 	}
 
-	protected String getSensorName() {
+	public String getSensorName() {
 		return sensorName;
 	}
 
-	protected void setSensorName(String sensorName) {
+	public void setSensorName(String sensorName) {
 		this.sensorName = sensorName;
 	}
 
-	protected String getSensorType() {
+	public String getSensorType() {
 		return sensorType;
 	}
 
-	protected void setSensorType(String sensorType) {
+	public void setSensorType(String sensorType) {
 		this.sensorType = sensorType;
 	}
 
-	protected Timestamp getTimestamp() {
+	public Timestamp getTimestamp() {
 		return timestamp;
 	}
 
-	protected void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
 	}
-	
+
 	/**
 	 * for debugging and testing
 	 */
-	protected void printDetails() {
+	public void printDetails() {
 		System.out.printf("ID: %s\n"
 						+ "Name: %s\n"
 						+ "Type: %s\n"
