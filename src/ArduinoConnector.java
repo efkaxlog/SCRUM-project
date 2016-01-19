@@ -93,8 +93,7 @@ public class ArduinoConnector implements SerialPortEventListener {
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				String inputLine=input.readLine();
-				System.out.println(inputLine);
+				DataHandling.recieveDataString(input.readLine());;
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
@@ -107,7 +106,6 @@ public class ArduinoConnector implements SerialPortEventListener {
 		main.initialize();
 		Thread t=new Thread() {
 			public void run() {
-				System.out.println("RUN");
 				//the following line will keep this app alive for 1000 seconds,
 				//waiting for events to occur and responding to them (printing incoming messages to console).
 				try {Thread.sleep(1000000);} catch (InterruptedException ie) {}
