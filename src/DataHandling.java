@@ -6,10 +6,7 @@ import sensors.HeatFluxSensor;
 import java.sql.Timestamp;
 
 public class DataHandling 
-
 {
-	
-	public ArduinoConnector arduino;
 	//Connection connection;
 	Database database;
 
@@ -25,12 +22,11 @@ public class DataHandling
 		////temp string to simulate data from arduino
 		dataString = "10,Temp,Int Temp,27,89,29,65";
 		
-		sensor = parseString(dataString);
+		sensor = makeSensor(dataString);
 		database.addSensor(sensor);
-		
 	}
 	
-	public Sensor parseString(String dataString)
+	public Sensor makeSensor(String dataString)
 	{
 		//Heat flux sensor:
 				//Sensor ID, Sensor Name, Sensor type, time stamp, heat flux data, surface temp data, air temp data 
@@ -85,12 +81,6 @@ public class DataHandling
 		}
 		
 		return sensor;
-	}
-	
-	public static void recieveDataString(String data) {
-		//handleObject(data);
-		System.out.println("Data handling\n__________");
-		System.out.println(data);
 	}
 
 }
