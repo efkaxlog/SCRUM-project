@@ -50,6 +50,7 @@ public class Database
 		{
 			insertIntoHeatFlux((HeatFluxSensor) sensor);
 		}
+		System.out.println(sensor.getSensorName() + "added");
 		} catch(SQLException e)
 		{
 			e.printStackTrace();

@@ -17,13 +17,8 @@ public class DataHandling
 	
 	public void handleObject(String dataString)
 	{
-		Sensor sensor;
+		database.addSensor(makeSensor(dataString));
 		
-		////temp string to simulate data from arduino
-		dataString = "10,Temp,Int Temp,27,89,29,65";
-		
-		sensor = makeSensor(dataString);
-		database.addSensor(sensor);
 	}
 	
 	public Sensor makeSensor(String dataString)
@@ -79,7 +74,7 @@ public class DataHandling
 		{
 			sensor = new AirTempSensor(id, sensorName, sensorType, timestamp, airTempData);
 		}
-		
+		System.out.println(sensor.getSensorName() + "made");
 		return sensor;
 	}
 
