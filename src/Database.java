@@ -12,12 +12,6 @@ public class Database
 	
 	public Database()
 	{
-		
-	}
-	
-	//connection
-	public static void main(String[] args)
-	{
 		String DRIVER_CLASS = "com.mysql.jdbc.Driver";
 		//helios
 		String url = "jdbc:mysql://helios.csesalford.com/sta302_spat"; //change to spat
