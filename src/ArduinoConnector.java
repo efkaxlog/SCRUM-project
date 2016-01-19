@@ -9,6 +9,8 @@ import java.util.Enumeration;
 
 
 public class ArduinoConnector implements SerialPortEventListener {
+	
+	private DataHandling dataHandler;
 	SerialPort serialPort;
         /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
@@ -93,7 +95,7 @@ public class ArduinoConnector implements SerialPortEventListener {
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				DataHandling.recieveDataString(input.readLine());;
+				dataHandler.handleObject(input.readLine());
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
