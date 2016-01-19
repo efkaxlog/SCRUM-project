@@ -4,6 +4,9 @@ import sensors.*;
 
 public class DataHandling 
 {
+	
+	public ArduinoConnector arduino;
+	
 	//Heat flux sensor:
 		//Sensor ID, Sensor Name, Sensor type, time stamp, heat flux data, surface temp data, air temp data 
 	//External temperature sensor:
@@ -31,11 +34,10 @@ public class DataHandling
 	//Air temperature data variables
 	//N/A
 	
-	
-	
-	
 	public DataHandling()
 	{
+		
+		
 		//Needs to be uncommented when classes are added.
 		//Connection connection = new Connection();
 		//dataString = connection.getStream();
@@ -70,6 +72,11 @@ public class DataHandling
 		    //No data
 		}
 		
+	}
+	
+	public static void getString(String data) {
+		System.out.println("Data handling\n__________");
+		System.out.println(data);
 	}
 
 }
