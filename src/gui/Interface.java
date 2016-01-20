@@ -18,18 +18,16 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
+@SuppressWarnings  ("rawtypes")
 
 public class Interface extends Application {
-	
-	
-	
+	  
+	  // Constructor
 	  public Interface() {
 			
 	  }
@@ -38,7 +36,6 @@ public class Interface extends Application {
 	  {
 		  final MenuBar menuBar = new MenuBar();
 		  
-		  
 		  final Menu fileMenu = new Menu("File");
 		  
 	      fileMenu.getItems().add(new MenuItem("New"));
@@ -46,8 +43,6 @@ public class Interface extends Application {
 	      fileMenu.getItems().add(new MenuItem("About"));
 	      fileMenu.getItems().add(new MenuItem("Exit"));
 	      menuBar.getMenus().add(fileMenu);
-		  
-		  
 		  
 		  menuBar.prefWidthProperty().bind(menuWidthProperty);
 		  return menuBar; 
@@ -76,11 +71,9 @@ public class Interface extends Application {
 	    root.getChildren().add(menuBar);
 	    root.getChildren().add(mainTabPane);
 	    scene = new Scene(root, 1250, 950, Color.WHEAT);
-	    
-	    
-	    
-	  	stage.setScene(scene);
+	    stage.setScene(scene);
 
+	    // Session tab
 	  	sessionTab = new Tab();
 	  	sessionTab.setText("Session");
 	  	sessionTab.setClosable(false);
@@ -91,6 +84,7 @@ public class Interface extends Application {
 	  	sessionPane = new Pane();
 	  	sessionTab.setContent(sessionPane);
 	  	
+	  	// Start Button
 	  	start = new Button();
 	  	start.setText("Start");
 	  	start.setLayoutX(20);
@@ -99,21 +93,21 @@ public class Interface extends Application {
 	  	//start.setPrefHeight(150);
 	  	sessionPane.getChildren().add(start);
 	  	
+	  	// Stop Button
 	  	stop = new Button();
 	  	stop.setText("Stop");
 	  	stop.setLayoutX(90);
-	  	stop.setLayoutY(50);
+		
+			stop.setLayoutY(50);
 	  	//stop.setPrefWidth(30);
 	  	//stop.setPrefHeight(30);
 	  	sessionPane.getChildren().add(stop);
 	  	
-	  	
-	  	
-	   subTabPane = new TabPane();
-	   sessionPane.getChildren().add(subTabPane);
+	    subTabPane = new TabPane();
+	    sessionPane.getChildren().add(subTabPane);
 	    
 	   
-	   
+	    // Heat flux sensor tab
 	    heatTab = new Tab();
 	  	heatTab.setText("Heat Flux Sensor");
 	  	heatTab.setClosable(false);
@@ -138,29 +132,19 @@ public class Interface extends Application {
         TableColumn surfaceData = new TableColumn("Surface Temp Data");
         TableColumn airData = new TableColumn("Air Temp Data");
         
-        
-       // heatTable.add("Jacob", "Smith", "jacob.smith@example.com");
-        
         heatTable.getColumns().addAll(sensorId, sensorName, timeStamp, heatData, surfaceData, airData);
-        //mainTabPane.getTabs().add(heatTab);
         
- 
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
         vbox.getChildren().addAll(label, heatTable);
         vbox.setLayoutX(50);
 	  	vbox.setLayoutY(100);
-	  
-        //sessionPane.getChildren().add(vbox);
 	  	
         heatPane.getChildren().add(vbox);
         
         
-        
-        
- 
-        
+        // External temperature sensor tab
 	  	externalTab = new Tab();
 	  	externalTab.setText("External Temp Sensor");
 	  	externalTab.setClosable(false);
@@ -191,11 +175,8 @@ public class Interface extends Application {
 	  	vbox2.setLayoutY(100);
         externalPane.getChildren().add(vbox2);
 	  	
-		
         
-        
-        
-        
+        // Air temp data tab
         airTab = new Tab();
 	  	airTab.setText("Air Temp Data");
 	  	airTab.setClosable(false);
@@ -227,7 +208,7 @@ public class Interface extends Application {
         airPane.getChildren().add(vbox3);
         
 	  	
-	  	
+	  	// Graph
 		sessionPane.getChildren().add(chart);
 	  	xAxis.setLabel("Time");
 	  	yAxis.setLabel("Temperature");
@@ -236,22 +217,23 @@ public class Interface extends Application {
 	  	chart.setLayoutY(250);
 	  	//chart.setPrefWidth(30);
 	  	//chart.setPrefHeight(30);
-
+	  	
+	  	
+	  	// Historical Data tab
 	  	historicalTab = new Tab();
 	  	historicalTab.setText("Historical Data");
 	  	historicalTab.setClosable(false);
 	  	mainTabPane.getTabs().add(historicalTab);
 	  	
-	  	
 	  	stage.show();
 	}
+	
 	
 	NumberAxis xAxis = new NumberAxis();
 	NumberAxis yAxis = new NumberAxis();
 	ScatterChart<Number,Number> chart = new ScatterChart<Number,Number>(xAxis,yAxis);
 
-	
-	void drawChart(ArrayList<Customer> customers)
+	public void drawChart(ArrayList<Customer> customers)
 	{
 	chart.getData().clear();
 	XYChart.Series series = new XYChart.Series();
@@ -261,8 +243,6 @@ public class Interface extends Application {
 	chart.getData().add(series);
 	
 	}
-	
-
 }
 
 
@@ -271,7 +251,8 @@ class Customer {
 		String name;
 		int age;
 		double balance;
-	public Customer(String name, int age, double balance) {
+	
+		public Customer(String name, int age, double balance) {
 		super();
 		this.name = name;
 		this.age = age;
