@@ -3,12 +3,11 @@ package sensors;
 import java.sql.Timestamp;
 
 abstract public class Sensor {
-	
-	private String sensorID, sensorName, sensorType; 
+
+	private String sensorID, sensorName, sensorType;
 	private Timestamp timestamp;
-	
-	public Sensor(String sensorID, String sensorName, 
-			String sensorType, Timestamp timestamp) {
+
+	public Sensor(String sensorID, String sensorName, String sensorType, Timestamp timestamp) {
 		this.sensorID = sensorID;
 		this.sensorName = sensorName;
 		this.sensorType = sensorType;
@@ -51,11 +50,8 @@ abstract public class Sensor {
 	 * for debugging and testing
 	 */
 	public void printDetails() {
-		System.out.printf("ID: %s\n"
-						+ "Name: %s\n"
-						+ "Type: %s\n"
-						+ "Timestamp: %s\n",
-						sensorID, sensorName, sensorType, timestamp.toString());
+		System.out.printf("ID: %s\n" + "Name: %s\n" + "Type: %s\n" + "Timestamp: %s\n",
+				sensorID, sensorName, sensorType, timestamp.toString());
 	}
 
 }
