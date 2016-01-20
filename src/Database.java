@@ -2,7 +2,9 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import sensors.*;
 
@@ -13,8 +15,8 @@ public class Database
 	public Database()
 	{
 		String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-		//helios
-		String url = "jdbc:mysql://helios.csesalford.com/sta302_spat"; //change to spat
+		//helios credentials
+		String url = "jdbc:mysql://helios.csesalford.com/sta302_spat";
 		String user = "sta302";
 		String pass = "Fosters2003";
 		try
@@ -94,5 +96,29 @@ public class Database
 		ps.setTimestamp(4, sensor.getTimestamp());
 		ps.setFloat(5, sensor.getAirTemp());
 		ps.executeUpdate();
+	}
+	
+	public String selectFromHeatFlux() throws SQLException
+	{
+		String sql = "SELECT * FROM Heat_Flux_Sensor";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		System.out.println(sql);
+		return sql;
+	}
+	
+	public String selectFromExternalTemp() throws SQLException
+	{
+		String sql = "SELECT * FROM External_Temp_Sensor";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		System.out.println(sql);
+		return sql;
+	}
+	
+	public String selectFromAirTemp() throws SQLException
+	{
+		String sql = "SELECT * FROM Air_Temp_Sensor";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		System.out.println(sql);
+		return sql;
 	}
 }
