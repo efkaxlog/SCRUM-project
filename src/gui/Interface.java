@@ -59,12 +59,12 @@ public class Interface extends Application {
 	
 	
 	Scene scene;
-	Pane root;
-	TabPane tabPane, tabPane2;
-	Tab tab1, tab2;
-	Tab tab3, tab4, tab5;
+	Pane root, sessionPane; //Pane for main tab
+	Pane heatPane, externalPane, airPane;  //Pane for sub tabs 
+	TabPane mainTabPane, subTabPane;
+	Tab sessionTab, historicalTab;  // Main tabs at the top
+	Tab heatTab, externalTab, airTab; //Sub tabs for displaying different tables
 	Button start, stop;
-	TextArea ta;
 	
 	
 	public void start(Stage stage) throws Exception {
@@ -72,24 +72,24 @@ public class Interface extends Application {
 		stage.setTitle("Sensor Reading App");
 		final MenuBar menuBar = buildMenuBarWithMenus(stage.widthProperty());
 		root = new Pane();
-		tabPane = new TabPane();
+		mainTabPane = new TabPane();
 	    root.getChildren().add(menuBar);
-	    root.getChildren().add(tabPane);
+	    root.getChildren().add(mainTabPane);
 	    scene = new Scene(root, 1250, 950, Color.WHEAT);
 	    
 	    
 	    
 	  	stage.setScene(scene);
 
-	  	tab1 = new Tab();
-	  	tab1.setText("Session");
-	  	tab1.setClosable(false);
-	  	tabPane.getTabs().add(tab1);
-	  	tabPane.setLayoutX(0);
-	  	tabPane.setLayoutY(25);
+	  	sessionTab = new Tab();
+	  	sessionTab.setText("Session");
+	  	sessionTab.setClosable(false);
+	  	mainTabPane.getTabs().add(sessionTab);
+	  	mainTabPane.setLayoutX(0);
+	  	mainTabPane.setLayoutY(25);
 	  	
-	  	Pane tabPane1 = new Pane();
-	  	tab1.setContent(tabPane1);
+	  	sessionPane = new Pane();
+	  	sessionTab.setContent(sessionPane);
 	  	
 	  	start = new Button();
 	  	start.setText("Start");
@@ -97,7 +97,7 @@ public class Interface extends Application {
 	  	start.setLayoutY(50);
 	  	//start.setPrefWidth(100);
 	  	//start.setPrefHeight(150);
-	  	tabPane1.getChildren().add(start);
+	  	sessionPane.getChildren().add(start);
 	  	
 	  	stop = new Button();
 	  	stop.setText("Stop");
@@ -105,38 +105,31 @@ public class Interface extends Application {
 	  	stop.setLayoutY(50);
 	  	//stop.setPrefWidth(30);
 	  	//stop.setPrefHeight(30);
-	  	tabPane1.getChildren().add(stop);
-	  	
-	  	
-	            /*new Person("Jacob", "Smith", "jacob.smith@example.com"),
-	            new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-	            new Person("Ethan", "Williams", "ethan.williams@example.com"),
-	            new Person("Emma", "Jones", "emma.jones@example.com"),
-	            new Person("Michael", "Brown", "michael.brown@example.com")*/
+	  	sessionPane.getChildren().add(stop);
 	  	
 	  	
 	  	
-	  	tabPane2 = new TabPane();
-	   tabPane1.getChildren().add(tabPane2);
+	   subTabPane = new TabPane();
+	   sessionPane.getChildren().add(subTabPane);
 	    
 	   
 	   
-	    tab3 = new Tab();
-	  	tab3.setText("Heat Flux Sensor");
-	  	tab3.setClosable(false);
-	  	tabPane2.getTabs().add(tab3);
-	  	tabPane2.setLayoutX(20);
-	  	tabPane2.setLayoutY(100);
+	    heatTab = new Tab();
+	  	heatTab.setText("Heat Flux Sensor");
+	  	heatTab.setClosable(false);
+	  	subTabPane.getTabs().add(heatTab);
+	  	subTabPane.setLayoutX(20);
+	  	subTabPane.setLayoutY(100);
 	  	
-	  	Pane tabPane3 = new Pane();
-	  	tab3.setContent(tabPane3);
+	  	heatPane = new Pane();
+	  	heatTab.setContent(heatPane);
 	  	
-	  	TableView table = new TableView();
+	  	TableView heatTable = new TableView();
 	  	
 	  	final Label label = new Label("                        Heat Flux Sensor");
         label.setFont(new Font("Arial", 20));
 	  	
-	  	table.setEditable(false);
+	  	heatTable.setEditable(false);
 	  	 
         TableColumn sensorId = new TableColumn("Sensor ID");
         TableColumn sensorName = new TableColumn("Sensor Name");
@@ -146,41 +139,41 @@ public class Interface extends Application {
         TableColumn airData = new TableColumn("Air Temp Data");
         
         
-       // table.add("Jacob", "Smith", "jacob.smith@example.com");
+       // heatTable.add("Jacob", "Smith", "jacob.smith@example.com");
         
-        table.getColumns().addAll(sensorId, sensorName, timeStamp, heatData, surfaceData, airData);
-        //tabPane.getTabs().add(tab3);
+        heatTable.getColumns().addAll(sensorId, sensorName, timeStamp, heatData, surfaceData, airData);
+        //mainTabPane.getTabs().add(heatTab);
         
  
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, table);
+        vbox.getChildren().addAll(label, heatTable);
         vbox.setLayoutX(50);
 	  	vbox.setLayoutY(100);
 	  
-        //tabPane1.getChildren().add(vbox);
+        //sessionPane.getChildren().add(vbox);
 	  	
-        tabPane3.getChildren().add(vbox);
+        heatPane.getChildren().add(vbox);
         
         
         
         
  
         
-	  	tab4 = new Tab();
-	  	tab4.setText("External Temp Sensor");
-	  	tab4.setClosable(false);
-	  	tabPane2.getTabs().add(tab4);
+	  	externalTab = new Tab();
+	  	externalTab.setText("External Temp Sensor");
+	  	externalTab.setClosable(false);
+	  	subTabPane.getTabs().add(externalTab);
 	  	
-	  	Pane tabPane4 = new Pane();
-	  	tab4.setContent(tabPane4);
+	  	externalPane = new Pane();
+	  	externalTab.setContent(externalPane);
 	  	
-	  	TableView table2 = new TableView();
+	  	TableView externalTable = new TableView();
         final Label label2 = new Label("       External Temperature Sensor");
         label2.setFont(new Font("Arial", 20));
 	  	
-	  	table.setEditable(true);
+	  	externalTable.setEditable(true);
 	  	 
         TableColumn sensorId2 = new TableColumn("Sensor ID");
         TableColumn sensorName2 = new TableColumn("Sensor Name");
@@ -188,34 +181,34 @@ public class Interface extends Application {
         TableColumn surfaceData2 = new TableColumn("Surface Temp Data");
         TableColumn airData2 = new TableColumn("Air Temp Data");
         
-        table2.getColumns().addAll(sensorId2, sensorName2, timeStamp2, surfaceData2, airData2);
+        externalTable.getColumns().addAll(sensorId2, sensorName2, timeStamp2, surfaceData2, airData2);
  
         final VBox vbox2 = new VBox();
         vbox2.setSpacing(5);
         vbox2.setPadding(new Insets(10, 0, 0, 10));
-        vbox2.getChildren().addAll(label2, table2);
+        vbox2.getChildren().addAll(label2, externalTable);
         vbox2.setLayoutX(50);
 	  	vbox2.setLayoutY(100);
-        tabPane4.getChildren().add(vbox2);
+        externalPane.getChildren().add(vbox2);
 	  	
 		
         
         
         
         
-        tab5 = new Tab();
-	  	tab5.setText("Air Temp Data");
-	  	tab5.setClosable(false);
-	  	tabPane2.getTabs().add(tab5);
+        airTab = new Tab();
+	  	airTab.setText("Air Temp Data");
+	  	airTab.setClosable(false);
+	  	subTabPane.getTabs().add(airTab);
         
-	  	Pane tabPane5 = new Pane();
-	  	tab5.setContent(tabPane5);
+	  	airPane = new Pane();
+	  	airTab.setContent(airPane);
 	  	
-        TableView table3 = new TableView();
+        TableView airTable = new TableView();
         final Label label3 = new Label("           Air Temperature Data");
         label3.setFont(new Font("Arial", 20));
 	  	
-	  	table3.setEditable(true);
+	  	airTable.setEditable(true);
 	  	 
         TableColumn sensorId3 = new TableColumn("Sensor ID");
         TableColumn sensorName3 = new TableColumn("Sensor Name");
@@ -223,19 +216,19 @@ public class Interface extends Application {
         TableColumn surfaceData3= new TableColumn("Surface Temp Data");
         TableColumn airData3 = new TableColumn("Air Temp Data");
         
-        table3.getColumns().addAll(sensorId3, sensorName3, timeStamp3, surfaceData3, airData3);
+        airTable.getColumns().addAll(sensorId3, sensorName3, timeStamp3, surfaceData3, airData3);
  
         final VBox vbox3 = new VBox();
         vbox3.setSpacing(5);
         vbox3.setPadding(new Insets(10, 0, 0, 10));
-        vbox3.getChildren().addAll(label3, table3);
+        vbox3.getChildren().addAll(label3, airTable);
         vbox3.setLayoutX(50);
 	  	vbox3.setLayoutY(100);
-        tabPane5.getChildren().add(vbox3);
+        airPane.getChildren().add(vbox3);
         
 	  	
 	  	
-		tabPane1.getChildren().add(chart);
+		sessionPane.getChildren().add(chart);
 	  	xAxis.setLabel("Time");
 	  	yAxis.setLabel("Temperature");
 	  	chart.setTitle("Sensor's Graph");
@@ -244,10 +237,10 @@ public class Interface extends Application {
 	  	//chart.setPrefWidth(30);
 	  	//chart.setPrefHeight(30);
 
-	  	tab2 = new Tab();
-	  	tab2.setText("Historical Data");
-	  	tab2.setClosable(false);
-	  	tabPane.getTabs().add(tab2);
+	  	historicalTab = new Tab();
+	  	historicalTab.setText("Historical Data");
+	  	historicalTab.setClosable(false);
+	  	mainTabPane.getTabs().add(historicalTab);
 	  	
 	  	
 	  	stage.show();
