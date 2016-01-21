@@ -68,13 +68,14 @@ public class Database
 	{
 		String sql = "INSERT INTO Heat_Flux_Sensor VALUES (?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
-		ps.setString(1, sensor.getSensorID());
+		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
 		ps.setString(3, sensor.getSensorName());
 		ps.setTimestamp(4, sensor.getTimestamp());
 		ps.setFloat(5, sensor.getHeatFluxTemp());
 		ps.setFloat(6, sensor.getInternalAirTemp());
 		ps.setFloat(7, sensor.getInternalWallSurfaceTemp());
+		System.out.print(ps.toString());
 		ps.executeUpdate();
 	}
 	
@@ -82,7 +83,7 @@ public class Database
 	{
 		String sql = "INSERT INTO External_Temp_Sensor VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
-		ps.setString(1, sensor.getSensorID());
+		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
 		ps.setString(3, sensor.getSensorName());
 		ps.setTimestamp(4, sensor.getTimestamp());
@@ -95,7 +96,7 @@ public class Database
 	{
 		String sql = "INSERT INTO Air_Temp_Sensor(?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
-		ps.setString(1, sensor.getSensorID());
+		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
 		ps.setString(3, sensor.getSensorName());
 		ps.setTimestamp(4, sensor.getTimestamp());

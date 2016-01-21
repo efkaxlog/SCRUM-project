@@ -6,7 +6,7 @@ public class HeatFluxSensor extends Sensor {
 
 	private float heatFluxTemp, internalWallSurfaceTemp, internalAirTemp;
 
-	public HeatFluxSensor(String sensorID, String sensorName, String sensorType, Timestamp timestamp,
+	public HeatFluxSensor(int sensorID, String sensorName, String sensorType, Timestamp timestamp,
 			float heatFluxTemp, float internalWallSurfaceTemp, float internalAirTemp) {
 
 		super(sensorID, sensorName, sensorType, timestamp);

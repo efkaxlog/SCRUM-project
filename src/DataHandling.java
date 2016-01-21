@@ -23,7 +23,7 @@ public class DataHandling {
 
 		Scanner scanner = new Scanner(dataString);
 		scanner.useDelimiter(",");
-		String id = scanner.next();
+		int id = scanner.nextInt();
 		String sensorName = scanner.next();
 		String sensorType = scanner.next();
 		float airTempData = scanner.nextFloat();
