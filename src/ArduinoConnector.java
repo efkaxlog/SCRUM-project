@@ -9,7 +9,7 @@ import java.util.Enumeration;
 
 public class ArduinoConnector implements SerialPortEventListener {
 
-	private DataHandling dataHandler;
+	private DataHandling dataHandler = new  DataHandling();
 	SerialPort serialPort;
 	/** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac
@@ -91,7 +91,9 @@ public class ArduinoConnector implements SerialPortEventListener {
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				dataHandler.handleObject(input.readLine());
+				String data = input.readLine();
+				dataHandler.handleObject(data);
+				System.out.println(data);
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}

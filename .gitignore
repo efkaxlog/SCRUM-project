@@ -1,6 +1,6 @@
 
 .metadata
-bin/
+#bin/
 tmp/
 *.tmp
 *.bak
@@ -35,3 +35,4 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+/bin/
