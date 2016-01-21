@@ -11,43 +11,61 @@ import sensors.ExternalTempSensor;
 import sensors.HeatFluxSensor;
 import sensors.Sensor;
 
-public class Database {
+public class Database 
+{
 	static Connection connection;
-
-	public Database() {
+	ArrayList <String> sensors = new ArrayList<String>();
+	
+	public Database()
+	{
 		String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://helios.csesalford.com:3306/sta302_spat";
 		//helios credentials
+		String url = "jdbc:mysql://helios.csesalford.com/sta302_spat";
 		String user = "sta302";
 		String pass = "Fosters2003";
-		try {
+		try
+		{
 			Class.forName(DRIVER_CLASS);
 			connection = DriverManager.getConnection(url, user, pass);
-		} catch (SQLException sqlException) {
+		}
+		catch (SQLException sqlException)
+		{
 			sqlException.printStackTrace();
 			System.exit(1);
-		} catch (Exception exception) {
+		}
+		catch (Exception exception)
+		{
 			System.err.println("Cannot load " + DRIVER_CLASS);
 			System.exit(1);
 		}
 	}
-
-	public void addSensor(Sensor sensor) {
-		try {
-			if (sensor instanceof ExternalTempSensor) {
+	
+	public void addSensor(Sensor sensor) 
+	{
+		try
+		{
+			if(sensor instanceof ExternalTempSensor) 
+			{
 				insertIntoExtTemp((ExternalTempSensor) sensor);
-			} else if (sensor instanceof AirTempSensor) {
+			} 
+			else if(sensor instanceof AirTempSensor) 
+			{
 				insertIntoAirTemp((AirTempSensor) sensor);
-			} else if (sensor instanceof HeatFluxSensor) {
+			} 
+			else if(sensor instanceof HeatFluxSensor)
+			{
 				insertIntoHeatFlux((HeatFluxSensor) sensor);
 			}
 			System.out.println(sensor.getSensorName() + "added");
-		} catch (SQLException e) {
+		} 
+		catch(SQLException e)
+		{
 			e.printStackTrace();
 		}
 	}
-
-	private void insertIntoHeatFlux(HeatFluxSensor sensor) throws SQLException {
+	
+	private void insertIntoHeatFlux(HeatFluxSensor sensor) throws SQLException
+	{
 		String sql = "INSERT INTO Heat_Flux_Sensor VALUES (?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, sensor.getSensorID());
@@ -59,8 +77,9 @@ public class Database {
 		ps.setFloat(7, sensor.getInternalWallSurfaceTemp());
 		ps.executeUpdate();
 	}
-
-	private void insertIntoExtTemp(ExternalTempSensor sensor) throws SQLException {
+	
+	private void insertIntoExtTemp(ExternalTempSensor sensor) throws SQLException
+	{
 		String sql = "INSERT INTO External_Temp_Sensor VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, sensor.getSensorID());
@@ -71,8 +90,9 @@ public class Database {
 		ps.setFloat(6, sensor.getExternalAirTemp());
 		ps.executeUpdate();
 	}
-
-	private void insertIntoAirTemp(AirTempSensor sensor) throws SQLException {
+	
+	private void insertIntoAirTemp(AirTempSensor sensor) throws SQLException
+	{
 		String sql = "INSERT INTO Air_Temp_Sensor(?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, sensor.getSensorID());
@@ -83,57 +103,56 @@ public class Database {
 		ps.executeUpdate();
 	}
 	
-	public ArrayList selectFromHeatFlux() throws SQLException
+	public ArrayList returnData() throws SQLException 
+	{
+		selectFromHeatFlux();
+		selectFromExternalTemp();
+		selectFromAirTemp();
+		return sensors;
+	}
+	
+	public void selectFromHeatFlux() throws SQLException
 	{
 		String sql = "SELECT * FROM Heat_Flux_Sensor";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
-		ArrayList<String> heatFluxArray = new ArrayList<String>();
 		while (rs.next()) 
 		{
+			System.out.println("got here");
 			String row = rs.getString("Sensor_ID") + "," + rs.getString("Sensor_Name")
 			+ "," + rs.getString("Sensor_Type") + "," + rs.getString("Time_Stamp")
 			+ "," + rs.getString("Heat_Flux_Data")+ "," + rs.getString("Surface_Temp_Data")
 			+ "," + rs.getString("Air_Temp_Data");
-			/*HeatFluxSensor sensor = new HeatFluxSensor
-					(rs.getString("Sensor_ID"), rs.getString("Sensor_Name"), 
-							rs.getString("Sensor_Type"), rs.getTimestamp("Time_Stamp"), 
-							rs.getFloat("Heat_Flux_Data"), rs.getFloat("Surface_Temp_Data"),
-							rs.getFloat("Air_Temp_Data"));*/
-			heatFluxArray.add(row);
+			System.out.println(row);
+			sensors.add(row);
 		}
-		return heatFluxArray;
 	}
 	
-	public ArrayList selectFromExternalTemp() throws SQLException
+	public void selectFromExternalTemp() throws SQLException
 	{
 		String sql = "SELECT * FROM External_Temp_Sensor";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
-		ArrayList<String> extTempArray = new ArrayList<String>();
 		while(rs.next())
 		{
 			String row = rs.getString("Sensor_ID") + "," + rs.getString("Sensor_Name")
 			+ "," + rs.getString("Sensor_Type") + "," + rs.getString("Time_Stamp")
 			+ "," + rs.getString("Surface_Temp_Data") + "," + rs.getString("Air_Temp_Data");
-			extTempArray.add(row);
+			sensors.add(row);
 		}
-		return extTempArray;
 	}
 	
-	public ArrayList selectFromAirTemp() throws SQLException
+	public void selectFromAirTemp() throws SQLException
 	{
 		String sql = "SELECT * FROM Air_Temp_Sensor";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
-		ArrayList<String> airTempArray = new ArrayList<String>();
 		while(rs.next())
 		{
 			String row = rs.getString("Sensor_ID") + "," + rs.getString("Sensor_Name")
 			+ "," + rs.getString("Sensor_Type") + "," + rs.getString("Time_Stamp")
 			+ "," + "," + rs.getString("Air_Temp_Data");
-			airTempArray.add(row);
+			sensors.add(row);
 		}
-		return airTempArray;
 	}
 }
