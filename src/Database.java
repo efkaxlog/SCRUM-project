@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import sensors.AirTempSensor;
@@ -56,7 +57,7 @@ public class Database
 			{
 				insertIntoHeatFlux((HeatFluxSensor) sensor);
 			}
-			System.out.println(sensor.getSensorName() + "added");
+			System.out.println(sensor.getSensorName() + " added");
 		} 
 		catch(SQLException e)
 		{
@@ -66,7 +67,10 @@ public class Database
 	
 	private void insertIntoHeatFlux(HeatFluxSensor sensor) throws SQLException
 	{
-		String sql = "INSERT INTO Heat_Flux_Sensor VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO Heat_Flux_Sensor"
+				+ "(Sensor_ID, Sensor_Type, Sensor_Name, Time_Stamp,"
+				+ "Heat_Flux_Data, Air_Temp_Data, Surface_Temp_Data) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
@@ -81,7 +85,10 @@ public class Database
 	
 	private void insertIntoExtTemp(ExternalTempSensor sensor) throws SQLException
 	{
-		String sql = "INSERT INTO External_Temp_Sensor VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO External_Temp_Sensor"
+				+ "(Sensor_ID, Sensor_Type, Sensor_Name, Time_Stamp,"
+				+ "Surface_Temp_Data, Air_Temp_Data) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
@@ -94,7 +101,9 @@ public class Database
 	
 	private void insertIntoAirTemp(AirTempSensor sensor) throws SQLException
 	{
-		String sql = "INSERT INTO Air_Temp_Sensor(?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO Air_Temp_Sensor"
+				+ "(Sensor_ID, Sensor_Type, Sensor_Name, Time_Stamp, Air_Temp_Data) "
+				+ "VALUES (?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
