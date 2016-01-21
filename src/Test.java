@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -5,8 +6,11 @@ import sensors.*;
 
 public class Test {
 
-	public Test() {
 
+
+	public Test() throws SQLException {
+		Database db = new Database();
+		db.selectFromHeatFlux();
 	}
 
 	public void testSensorsData() {
