@@ -18,7 +18,6 @@ public class Database {
 		String DRIVER_CLASS = "com.mysql.jdbc.Driver";
 		String url = "jdbc:mysql://helios.csesalford.com:3306/sta302_spat";
 		//helios credentials
-		String url = "jdbc:mysql://helios.csesalford.com/sta302_spat";
 		String user = "sta302";
 		String pass = "Fosters2003";
 		try {
