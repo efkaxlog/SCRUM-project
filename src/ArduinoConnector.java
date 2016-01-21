@@ -9,12 +9,10 @@ import java.util.Enumeration;
 
 public class ArduinoConnector implements SerialPortEventListener {
 
-	private DataHandling dataHandler = new  DataHandling();
+	private DataHandler dataHandler = new  DataHandler();
 	SerialPort serialPort;
 	/** The port we're normally going to use. */
-	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac
-																				// OS
-																				// X
+	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // OSX
 			"/dev/ttyACM0", // Raspberry Pi
 			"/dev/ttyUSB0", // Linux
 			"COM3", // Windows
@@ -91,9 +89,7 @@ public class ArduinoConnector implements SerialPortEventListener {
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				String data = input.readLine();
-				dataHandler.handleObject(data);
-				System.out.println(data);
+				dataHandler.handleObject(input.readLine());
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
