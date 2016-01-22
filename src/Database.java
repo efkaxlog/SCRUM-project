@@ -3,9 +3,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import sensors.AirTempSensor;
 import sensors.ExternalTempSensor;
@@ -15,8 +18,6 @@ import sensors.Sensor;
 public class Database 
 {
 	static Connection connection;
-	ArrayList <String> sensors = new ArrayList<String>();
-	
 	HashMap<String, String> sensorTables = new HashMap<String, String>();
 	public Database()
 	{
@@ -106,56 +107,50 @@ public class Database
 		ps.executeUpdate();
 	}
 	
-	public ArrayList getAllSensorsStrings() throws SQLException 
-	{
-		selectFromHeatFlux();
-		selectFromExternalTemp();
-		selectFromAirTemp();
-		return sensors;
+	public void addSensorStrings(String tableName, ArrayList<String> sensorStrings) throws SQLException {
+		if (tableName.equals("all")) {
+			Collection<String> c = sensorTables.values();
+			Iterator itr = c.iterator();	
+			while (itr.hasNext()) {
+				String nextTable = (String)itr.next();
+				addSensorsStringsFromTable(nextTable, sensorStrings);
+			}
+		} else {
+			addSensorsStringsFromTable(tableName, sensorStrings);
+		}
 	}
 	
-	public void selectFromHeatFlux() throws SQLException
-	{
-		String sql = "SELECT * FROM Heat_Flux_Sensor";
+	/**
+	 * 
+	 * @param tableName
+	 * @throws SQLException
+	 * adds delimited, ready for making sensor objects with
+	 * sensor data strings to an Arraylist passed as an argument
+	 */
+	public void addSensorsStringsFromTable(String tableName, ArrayList<String> sensorStrings) 
+			throws SQLException {
+		String sql = "SELECT * FROM " + tableName;
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
+		// for storing table column names
+		ArrayList<String> columns = new ArrayList<String>();
+		ResultSetMetaData metadata = rs.getMetaData();
+		int columnCount = metadata.getColumnCount();
+		for (int i=1; i < columnCount; i++) {
+			columns.add(metadata.getColumnName(i));
+		}
 		while (rs.next()) 
 		{
-			System.out.println("got here");
-			String row = rs.getString("Sensor_ID") + "," + rs.getString("Sensor_Name")
-			+ "," + rs.getString("Sensor_Type") + "," + rs.getString("Time_Stamp")
-			+ "," + rs.getString("Heat_Flux_Data")+ "," + rs.getString("Surface_Temp_Data")
-			+ "," + rs.getString("Air_Temp_Data");
-			System.out.println(row);
-			sensors.add(row);
+			StringBuilder sb = new StringBuilder();
+			String sensorDataString = "";
+			for(String columnName : columns) {
+				String value = rs.getString(columnName);
+				sensorDataString = sb.append(value + ",").toString();
+			}
+			// remove last character because it's a comma
+			sensorDataString = Utilities.removeLastChar(sensorDataString);
+			sensorStrings.add(sensorDataString);
 		}
-	}
-	
-	public void selectFromExternalTemp() throws SQLException
-	{
-		String sql = "SELECT * FROM External_Temp_Sensor";
-		PreparedStatement ps = connection.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
-		while(rs.next())
-		{
-			String row = rs.getString("Sensor_ID") + "," + rs.getString("Sensor_Name")
-			+ "," + rs.getString("Sensor_Type") + "," + rs.getString("Time_Stamp")
-			+ "," + rs.getString("Surface_Temp_Data") + "," + rs.getString("Air_Temp_Data");
-			sensors.add(row);
-		}
-	}
-	
-	public void selectFromAirTemp() throws SQLException
-	{
-		String sql = "SELECT * FROM Air_Temp_Sensor";
-		PreparedStatement ps = connection.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
-		while(rs.next())
-		{
-			String row = rs.getString("Sensor_ID") + "," + rs.getString("Sensor_Name")
-			+ "," + rs.getString("Sensor_Type") + "," + rs.getString("Time_Stamp")
-			+ "," + "," + rs.getString("Air_Temp_Data");
-			sensors.add(row);
-		}
+		
 	}
 }
