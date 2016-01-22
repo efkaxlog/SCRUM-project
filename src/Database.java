@@ -136,7 +136,7 @@ public class Database
 		ArrayList<String> columns = new ArrayList<String>();
 		ResultSetMetaData metadata = rs.getMetaData();
 		int columnCount = metadata.getColumnCount();
-		for (int i=1; i < columnCount; i++) {
+		for (int i=1; i <= columnCount; i++) {
 			columns.add(metadata.getColumnName(i));
 		}
 		while (rs.next()) 
