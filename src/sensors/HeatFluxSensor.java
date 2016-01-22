@@ -3,14 +3,12 @@ package sensors;
 import java.sql.Timestamp;
 
 public class HeatFluxSensor extends Sensor {
-	
-	private float heatFluxTemp, internalWallSurfaceTemp, internalAirTemp; 
 
-	public HeatFluxSensor(String sensorID, String sensorName,
-						String sensorType, Timestamp timestamp, 
-						float heatFluxTemp, float internalWallSurfaceTemp,
-						float internalAirTemp) {
-		
+	private float heatFluxTemp, internalWallSurfaceTemp, internalAirTemp;
+
+	public HeatFluxSensor(int sensorID, String sensorName, String sensorType, Timestamp timestamp,
+			float heatFluxTemp, float internalWallSurfaceTemp, float internalAirTemp) {
+
 		super(sensorID, sensorName, sensorType, timestamp);
 		this.heatFluxTemp = heatFluxTemp;
 		this.internalWallSurfaceTemp = internalWallSurfaceTemp;
@@ -40,16 +38,15 @@ public class HeatFluxSensor extends Sensor {
 	public void setInternalAirTemp(float internalAirTemp) {
 		this.internalAirTemp = internalAirTemp;
 	}
-	
+
 	public void printDetails() {
 		System.out.println("-------------------------");
 		System.out.println("Class: " + getClass().getSimpleName());
 		super.printDetails();
 		System.out.println("Heat Flux Temperature: " + heatFluxTemp);
-		System.out.println("Internal Wall Surface Temperature: " 
-							+ internalWallSurfaceTemp);
+		System.out.println("Internal Wall Surface Temperature: " + internalWallSurfaceTemp);
 		System.out.println("Internal Air Temperature: " + internalAirTemp);
-		
+
 	}
 
 }
