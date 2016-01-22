@@ -6,10 +6,10 @@ public class ExternalTempSensor extends Sensor {
 
 	private float externalSurfaceTemp, externalAirTemp;
 
-	public ExternalTempSensor(int sensorID, String sensorName, String sensorType, Timestamp timestamp,
+	public ExternalTempSensor(int sensorID, String sensorName, String sensorType,
 			float externalSurfaceTemp, float externalAirTemp) {
 
-		super(sensorID, sensorName, sensorType, timestamp);
+		super(sensorID, sensorName, sensorType);
 		this.externalSurfaceTemp = externalSurfaceTemp;
 		this.externalAirTemp = externalAirTemp;
 

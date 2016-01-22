@@ -8,11 +8,10 @@ abstract public class Sensor {
 	private int sensorID;
 	private Timestamp timestamp;
 
-	public Sensor(int sensorID, String sensorName, String sensorType, Timestamp timestamp) {
+	public Sensor(int sensorID, String sensorName, String sensorType) {
 		this.sensorID = sensorID;
 		this.sensorName = sensorName;
 		this.sensorType = sensorType;
-		this.timestamp = timestamp;
 	}
 
 	public int getSensorID() {

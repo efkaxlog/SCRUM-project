@@ -6,9 +6,9 @@ public class AirTempSensor extends Sensor {
 
 	private float airTemp;
 
-	public AirTempSensor(int sensorID, String sensorName, String sensorType, Timestamp timestamp, float airTemp) {
+	public AirTempSensor(int sensorID, String sensorName, String sensorType, float airTemp) {
 
-		super(sensorID, sensorName, sensorType, timestamp);
+		super(sensorID, sensorName, sensorType);
 		this.airTemp = airTemp;
 	}
 
