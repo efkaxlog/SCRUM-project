@@ -88,8 +88,10 @@ public class ArduinoConnector implements SerialPortEventListener {
 	 */
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+			boolean isDataFromArduino = true;
 			try {
-				dataHandler.handleObject(input.readLine());
+				String dataString = input.readLine();
+				dataHandler.handleObject(dataString, isDataFromArduino);
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
