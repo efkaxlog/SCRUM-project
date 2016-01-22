@@ -69,6 +69,7 @@ public class DataHandler {
 			float airTempData = scanner.nextFloat();
 			sensor = new AirTempSensor(id, sensorName, sensorType, airTempData);
 		}
+		
 		Timestamp ts;
 		if (isDataFromArduino) {
 			ts = Utilities.getCurrentTimestamp();
@@ -76,6 +77,7 @@ public class DataHandler {
 			ts = Utilities.getTimestampFromString(scanner.next());
 		}
 		sensor.setTimestamp(ts);
+		scanner.close();
 		return sensor;
 	}
 

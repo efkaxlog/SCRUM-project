@@ -1,7 +1,5 @@
 package sensors;
 
-import java.sql.Timestamp;
-
 public class AirTempSensor extends Sensor {
 
 	private float airTemp;

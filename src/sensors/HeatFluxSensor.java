@@ -1,7 +1,5 @@
 package sensors;
 
-import java.sql.Timestamp;
-
 public class HeatFluxSensor extends Sensor {
 
 	private float heatFluxTemp, internalWallSurfaceTemp, internalAirTemp;

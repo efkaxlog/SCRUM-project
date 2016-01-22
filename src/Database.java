@@ -101,7 +101,7 @@ public class Database {
 	public void addSensorStrings(String tableName, ArrayList<String> sensorStrings) throws SQLException {
 		if (tableName.equals("all")) {
 			Collection<String> c = sensorTables.values();
-			Iterator itr = c.iterator();
+			Iterator<String> itr = c.iterator();
 			while (itr.hasNext()) {
 				String nextTable = (String) itr.next();
 				addSensorsStringsFromTable(nextTable, sensorStrings);
