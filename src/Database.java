@@ -98,7 +98,7 @@ public class Database
 		ps.executeUpdate();
 	}
 	
-	public ArrayList returnData() throws SQLException 
+	public ArrayList getAllSensorsStrings() throws SQLException 
 	{
 		selectFromHeatFlux();
 		selectFromExternalTemp();
