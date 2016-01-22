@@ -45,19 +45,25 @@ public class Database
 		setupHashMapTables();
 	}
 	
+	/**
+	 * populates sensorTables with names of the tables in the DB
+	 */
 	private void setupHashMapTables() {
 		sensorTables.put("heat_flux1", "Heat_Flux_Sensor");
 		sensorTables.put("Int Temp", "Air_Temp_Sensor");
 		sensorTables.put("Ext Temp", "External_Temp_Sensor");
 	}
 	
-	public void insertSensorIntoTable(Sensor sensor) throws SQLException {
+	/**
+	 * 
+	 * @return String SQL generated for a particular sensor
+	 */
+	private String generateInsertSQL(Sensor sensor) {
 		String sensorName = sensor.getSensorName();
-		System.out.println(sensorName);
 		// get DB table name for specific sensor type
 		String tableName = sensorTables.get(sensorName);
-		System.out.println("Table name: " + tableName);
-		
+		// SQL for columns which all sensors share
+		String commonSensorColumnsSQL = "(Sensor_ID, Sensor_Type, Sensor_Name, Time_Stamp";
 		String sqlQueryRemainder = "";
 		if (sensorName.equals("heat_flux1")) {
 			sqlQueryRemainder = " ,Heat_Flux_Data, Air_Temp_Data, Surface_Temp_Data) "
@@ -69,11 +75,14 @@ public class Database
 			sqlQueryRemainder = ", Air_Temp_Data) "
 					+ "VALUES (?, ?, ?, ?, ?)";
 		}
-		System.out.println(sqlQueryRemainder);
-		// SQL for columns which all sensors share
-		String commonSensorColumnsSQL = "(Sensor_ID, Sensor_Type, Sensor_Name, Time_Stamp";
 		// glue the SQL togetha m8
 		String sqlQuery = "INSERT INTO " + tableName + commonSensorColumnsSQL + sqlQueryRemainder;
+		return sqlQuery;
+	}
+	
+	public void insertSensorIntoTable(Sensor sensor) throws SQLException {
+		String sqlQuery = generateInsertSQL(sensor);
+		String sensorName = sensor.getSensorName();
 		PreparedStatement ps = connection.prepareStatement(sqlQuery);
 		ps.setInt(1, sensor.getSensorID());
 		ps.setString(2, sensor.getSensorType());
@@ -94,7 +103,6 @@ public class Database
 			AirTempSensor s = ((AirTempSensor)sensor);
 			ps.setFloat(5, s.getAirTemp());
 		}
-		System.out.println(ps.toString());
 		ps.executeUpdate();
 	}
 	
