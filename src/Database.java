@@ -64,7 +64,7 @@ public class Database
 		// get DB table name for specific sensor type
 		String tableName = sensorTables.get(sensorName);
 		// SQL for columns which all sensors share
-		String commonSensorColumnsSQL = "(Sensor_ID, Sensor_Type, Sensor_Name, Time_Stamp";
+		String commonSensorColumnsSQL = "(Sensor_ID, Sensor_Type, Sensor_Name, timestamp";
 		String sqlQueryRemainder = "";
 		if (sensorName.equals("heat_flux1")) {
 			sqlQueryRemainder = " ,Heat_Flux_Data, Air_Temp_Data, Surface_Temp_Data) "
@@ -144,12 +144,18 @@ public class Database
 			StringBuilder sb = new StringBuilder();
 			String sensorDataString = "";
 			for(String columnName : columns) {
+				// don't want table primary key
+				if (columnName.equals("ID")) {
+					continue;
+				}
 				String value = rs.getString(columnName);
 				sensorDataString = sb.append(value + ",").toString();
 			}
 			// remove last character because it's a comma
 			sensorDataString = Utilities.removeLastChar(sensorDataString);
 			sensorStrings.add(sensorDataString);
+			
+			
 		}
 		
 	}
