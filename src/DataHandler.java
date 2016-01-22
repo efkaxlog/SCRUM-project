@@ -10,26 +10,25 @@ import java.sql.Timestamp;
 public class DataHandler {
 	// Connection connection;
 	Database database;
-	
+
 	public DataHandler() {
 		database = new Database();
 	}
-	
-	//fetches the data from the database class
-	public ArrayList<Sensor> makeSensorsFromDB(String tableName) {	
+
+	// fetches the data from the database class
+	public ArrayList<Sensor> makeSensorsFromDB(String tableName) {
 		boolean isDataFromArduino = false;
 		ArrayList<String> sensorDataStrings = new ArrayList<String>();
 		try {
 			database.addSensorStrings(tableName, sensorDataStrings);
 		} catch (SQLException e) {
-			System.out.println("Failed to retrieve sensors data "
-					+ "strings from database. (table name: " +tableName);
+			System.out.println("Failed to retrieve sensors data " + "strings from database. (table name: " + tableName);
 			e.printStackTrace();
 		}
-		
+
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		if (sensorDataStrings != null) {
-			for(String row : sensorDataStrings) {
+			for (String row : sensorDataStrings) {
 				sensors.add(makeSensor(row, isDataFromArduino));
 			}
 		}
@@ -53,21 +52,19 @@ public class DataHandler {
 		int id = scanner.nextInt();
 		String sensorType = scanner.next();
 		String sensorName = scanner.next();
-		
+
 		if (sensorName.equals("heat_flux1")) {
 			float heatFluxTemp = scanner.nextFloat();
 			float internalWallSurfaceTemp = scanner.nextFloat();
 			float airTempData = scanner.nextFloat();
-			
-			sensor = new HeatFluxSensor(id, sensorName, sensorType,
-					heatFluxTemp, internalWallSurfaceTemp, airTempData);
-			
+
+			sensor = new HeatFluxSensor(id, sensorName, sensorType, heatFluxTemp, internalWallSurfaceTemp, airTempData);
+
 		} else if (sensorName.equals("Ext Temp")) {
 			float externalSurfaceTemp = scanner.nextFloat();
 			float airTempData = scanner.nextFloat();
-			sensor = new ExternalTempSensor(id, sensorName, sensorType,
-					externalSurfaceTemp, airTempData);
-			
+			sensor = new ExternalTempSensor(id, sensorName, sensorType, externalSurfaceTemp, airTempData);
+
 		} else {
 			float airTempData = scanner.nextFloat();
 			sensor = new AirTempSensor(id, sensorName, sensorType, airTempData);
@@ -81,6 +78,5 @@ public class DataHandler {
 		sensor.setTimestamp(ts);
 		return sensor;
 	}
-	
-	
+
 }

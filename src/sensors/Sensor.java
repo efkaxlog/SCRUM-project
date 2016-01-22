@@ -50,8 +50,8 @@ abstract public class Sensor {
 	 * for debugging and testing
 	 */
 	public void printDetails() {
-		System.out.printf("ID: %s\n" + "Name: %s\n" + "Type: %s\n" + "Timestamp: %s\n",
-				sensorID, sensorName, sensorType, timestamp.toString());
+		System.out.printf("ID: %s\n" + "Name: %s\n" + "Type: %s\n" + "Timestamp: %s\n", sensorID, sensorName,
+				sensorType, timestamp.toString());
 	}
 
 }

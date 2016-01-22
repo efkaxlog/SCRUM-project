@@ -10,15 +10,15 @@ public abstract class Utilities {
 	 * returns string without it's last character
 	 */
 	public static String removeLastChar(String str) {
-		return str.substring(0, str.length()-1);
+		return str.substring(0, str.length() - 1);
 	}
-	
+
 	public static Timestamp getCurrentTimestamp() {
 		Calendar c = Calendar.getInstance();
 		java.util.Date now = c.getTime();
 		return new Timestamp(now.getTime());
 	}
-	
+
 	public static Timestamp getTimestampFromString(String timestampString) {
 		String pattern = "yyyy-MM-dd hh:mm:ss.SSS";
 		Timestamp timestamp = null;
