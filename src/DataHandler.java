@@ -1,5 +1,6 @@
 
 //import ArduinoConnection.Connection;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
 import sensors.*;
@@ -10,9 +11,29 @@ import java.sql.Timestamp;
 public class DataHandler {
 	// Connection connection;
 	Database database;
+	ArrayList<Sensor> allSensors = new ArrayList<Sensor>();
 
+	
 	public DataHandler() {
 		database = new Database();
+	}
+	
+	//fetches the data from the database class
+	public ArrayList<Sensor> fetchUIdata() {		
+		ArrayList<String> sensorDataStrings = null;
+		try {
+			sensorDataStrings = new ArrayList<String>(database.getAllSensorsStrings());
+		} catch (SQLException e) {
+			System.out.println("Failed to return sensors data from database");
+			e.printStackTrace();
+		}
+		
+		if (sensorDataStrings != null) {
+			for(String row : sensorDataStrings) {
+				allSensors.add(makeSensor(row));
+			}
+		}
+		return allSensors;
 	}
 
 	public void handleObject(String dataString) {
