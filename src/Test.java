@@ -1,16 +1,26 @@
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-import sensors.*;
+import sensors.AirTempSensor;
+import sensors.ExternalTempSensor;
+import sensors.HeatFluxSensor;
 
 public class Test {
 
-
+	Database db = new Database();
 
 	public Test() throws SQLException {
-		Database db = new Database();
-		db.selectFromHeatFlux();
+		
+	}
+	
+	public void testGettingSensorStringsFromDB() throws SQLException {
+		ArrayList<String> sensorStrings = new ArrayList<String>();
+		db.addSensorStrings("all", sensorStrings);
+		for (String data : sensorStrings) {
+			System.out.println(data);
+		}
 	}
 
 	public void testSensorsData() {
