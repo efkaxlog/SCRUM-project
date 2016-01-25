@@ -43,8 +43,6 @@ import sensors.Sensor;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import com.apple.laf.AquaButtonBorder.Dynamic;
-
 public class Interface extends Application {
 	 public static void main(String[] args) 
 	 {
@@ -54,6 +52,7 @@ public class Interface extends Application {
 	
 	  // Constructor
 	  public Interface() 
+	  
 	  {
 			
 	  }
@@ -119,13 +118,18 @@ public class Interface extends Application {
 	Button start, stop, search;
 	TextField startTextField, endTextField;
 	Timestamp timestamp;
-	ArrayList<Sensor> sensors = new ArrayList<Sensor>(); //ArrayList which holds the values of all sensors in the tables
+	ObservableList<Sensor> airTempTableData = FXCollections.observableArrayList(),
+			externalTempTableData = FXCollections.observableArrayList(), 
+			heatFluxTableData = FXCollections.observableArrayList(); //ArrayList which holds the values of all sensors in the tables
 	BorderPane sessionsStartBtnsPane;
 	
 	TableView<Sensor> heatFluxTable = new TableView<Sensor>(), externalTempTable = new TableView<Sensor>(), airTempTable = new TableView<Sensor>();
-	NumberAxis xAxis = new NumberAxis();
-	NumberAxis yAxis = new NumberAxis();
-	ScatterChart<Number,Number> chart = new ScatterChart<Number,Number>(xAxis,yAxis);
+	NumberAxis heatFluxXAxis = new NumberAxis(), externalTempXAxis = new NumberAxis(), airTempXAxis = new NumberAxis();
+	NumberAxis heatFluxYAxis = new NumberAxis(), externalTempYAxis = new NumberAxis(), airTempYAxis = new NumberAxis();
+	ScatterChart<Number,Number> heatFluxChart = new ScatterChart<Number,Number>(heatFluxXAxis,heatFluxYAxis);
+	ScatterChart<Number,Number> externalTempChart = new ScatterChart<Number,Number>(externalTempXAxis,externalTempYAxis);
+	ScatterChart<Number,Number> airTempChart = new ScatterChart<Number,Number>(airTempXAxis,airTempYAxis);
+	
 	
 	public void start(Stage stage) throws Exception 
 	{
@@ -194,7 +198,7 @@ public class Interface extends Application {
 	    	  public void handle(ActionEvent e) 
 	    	  {
 	    		  System.out.println("Stop button pressed");
-	    		  drawChart(sensors);
+	    		  drawChart(heatFluxTableData);
 	    	  }	  
 	      });
 	  	
@@ -203,6 +207,7 @@ public class Interface extends Application {
 	    sessionPane.getChildren().add(sessionTabTabpane);
 	    sessionTabTabpane.setLayoutX(0);
 	  	sessionTabTabpane.setLayoutY(50);
+	  	sessionTabTabpane.setPrefWidth(scene.getWidth());
 	   
 	    heatTab = new Tab(); //heatFlux tab
 	  	heatTab.setText("Heat Flux Sensor");
@@ -212,6 +217,14 @@ public class Interface extends Application {
 	  	heatFluxPane = new Pane(); //heatFlux pane, held within the heat flux tab
 	  	heatTab.setContent(heatFluxPane);
 	  	heatFluxPane.getChildren().add(createTable("HeatFluxSensor", "Heat Flux Sensors"));
+	  	
+	    //HeatFlux Graph                   <--------- Create a new method to create a graph for each table??????
+	  	heatFluxXAxis.setLabel("Time");
+	  	heatFluxYAxis.setLabel("Temperature");
+	  	heatFluxChart.setTitle("Heat Flux Data");
+	  	heatFluxChart.setLayoutX(680);
+	  	heatFluxChart.setLayoutY(10);
+	  	heatFluxPane.getChildren().add(heatFluxChart);
 	  	
 	  	
 	  	externalTab = new Tab(); //externalTemp tab
@@ -223,6 +236,14 @@ public class Interface extends Application {
 	  	externalTab.setContent(externalTempPane);
 	  	externalTempPane.getChildren().add(createTable("ExternalTempSensor", "External Temperature Sensors"));
 	  	
+	    //ExternalTemp Graph                   <--------- Create a new method to create a graph for each table??????
+	  	externalTempXAxis.setLabel("Time");
+	  	externalTempYAxis.setLabel("Temperature");
+	  	externalTempChart.setTitle("External Temperature Data");
+	  	externalTempChart.setLayoutX(680);
+	  	externalTempChart.setLayoutY(10);
+	  	externalTempPane.getChildren().add(externalTempChart);
+	  	
 	  	
         airTab = new Tab(); //airTemp tab
 	  	airTab.setText("Air Temp Data");
@@ -233,16 +254,13 @@ public class Interface extends Application {
 	  	airTab.setContent(airTempPane);
 	  	airTempPane.getChildren().add(createTable("AirTempSensor", "Air Temperature Sensors"));
 	  	
-       
-	  	
-	  	// Graph                   <--------- Create a new method to create a graph for each table??????
-		sessionPane.getChildren().add(chart);
-	  	xAxis.setLabel("Time");
-	  	yAxis.setLabel("Temperature");
-	  	chart.setTitle("Sensor's Graph");
-	  	chart.setLayoutX(700);
-	  	chart.setLayoutY(250);
-	  	
+	    //AirTemp Graph                   <--------- Create a new method to create a graph for each table??????
+	  	airTempXAxis.setLabel("Time");
+	  	airTempYAxis.setLabel("Temperature");
+	  	airTempChart.setTitle("Air Temperature Data");
+	  	airTempChart.setLayoutX(680);
+	  	airTempChart.setLayoutY(10);
+	  	airTempPane.getChildren().add(airTempChart);
 	  	
 	    //<--Objects within the HistoricalData tab-->
 	  	
@@ -273,19 +291,19 @@ public class Interface extends Application {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void drawChart(ArrayList<Sensor> sensors)
+	public void drawChart(ObservableList<Sensor> tableData)
 	{
-		chart.getData().clear();
+		heatFluxChart.getData().clear();
 		XYChart.Series series = new XYChart.Series();
-		XYChart.Series series2 = new XYChart.Series();
+		//XYChart.Series series2 = new XYChart.Series();
 		//series.setName("Model Data");
-		for(Sensor sensor : sensors)
+		for(Sensor sensor : tableData)
 		{
-		    //series.getData().add(new XYChart.Data(((List<MenuItem>) sensor.getTimestamp()).get(Calendar.MINUTE), sensor.getSensorID()));
-		    series2.getData().add(new XYChart.Data(sensor.getTimestamp().getSeconds() + 10, sensor.getSensorID()));
+		    series.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), sensor.getSensorID()));  //<------needs changing 
+		    //series2.getData().add(new XYChart.Data(sensor.getTimestamp().getSeconds() + 10, sensor.getSensorID()));
 		}
-		chart.getData().add(series);
-		chart.getData().add(series2);
+		heatFluxChart.getData().add(series);
+		//heatFluxChart.getData().add(series2);
 	
 	}
 	
@@ -345,37 +363,19 @@ public class Interface extends Application {
 	}
 	
 	public void populateTable(Sensor sensor)
-	{
-		sensors.add(sensor);
-		
-		ArrayList<Sensor> heatFluxSensors = new ArrayList<Sensor>(), externalTempSensors = new ArrayList<Sensor>(), airTempSensors = new ArrayList<Sensor>();
-		
-		for (Sensor currentSensor : sensors)
-		{
-			if (currentSensor instanceof AirTempSensor)
-			{
-				airTempSensors.add(currentSensor);
-			} else if (currentSensor instanceof ExternalTempSensor)
-			{
-				externalTempSensors.add(currentSensor);
-			} else if (currentSensor instanceof HeatFluxSensor)
-			{
-				heatFluxSensors.add(currentSensor);
-			}
-		}
-			
+	{		
 		if (sensor instanceof AirTempSensor)
 		{
-			ObservableList<Sensor> tableData = FXCollections.observableArrayList(airTempSensors);
-			airTempTable.setItems(tableData);
+			airTempTableData.add(sensor);
+			airTempTable.setItems(airTempTableData);
 		} else if (sensor instanceof ExternalTempSensor)
 		{
-			ObservableList<Sensor> tableData = FXCollections.observableArrayList(externalTempSensors);
-			externalTempTable.setItems(tableData);
+			externalTempTableData.add(sensor);
+			externalTempTable.setItems(externalTempTableData);
 		} else if (sensor instanceof HeatFluxSensor)
 		{
-			ObservableList<Sensor> tableData = FXCollections.observableArrayList(heatFluxSensors);
-			heatFluxTable.setItems(tableData);
+			heatFluxTableData.add(sensor);
+			heatFluxTable.setItems(heatFluxTableData);
 		}
 	}
 }
