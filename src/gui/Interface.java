@@ -1,16 +1,6 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.FXCollections;
@@ -18,6 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -35,11 +27,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sensors.AirTempSensor;
 import sensors.ExternalTempSensor;
@@ -49,8 +42,8 @@ import sensors.Sensor;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
+
+import com.apple.laf.AquaButtonBorder.Dynamic;
 
 public class Interface extends Application {
 	 public static void main(String[] args) 
@@ -122,17 +115,20 @@ public class Interface extends Application {
 	Pane heatFluxPane, externalTempPane, airTempPane;  //Pane for sub tabs 
 	TabPane mainTabPane, sessionTabTabpane;
 	Tab sessionTab, historicalTab;  // Main tabs at the top
-	Tab heatTab, externalTab, airTab; //tab  to the tabpane withi the sessionTab 
+	Tab heatTab, externalTab, airTab; //tab  to the tabpane with the sessionTab 
 	Button start, stop, search;
 	TextField startTextField, endTextField;
 	Timestamp timestamp;
-	TableView heatTable, externalTable, airTable;
-	public HeatFluxSensor heatFluxSensor;
-	public AirTempSensor airTempSensor;
-	public ExternalTempSensor externalTempSensor;
-	private Dimension frame;
+	ArrayList<Sensor> sensors = new ArrayList<Sensor>(); //ArrayList which holds the values of all sensors in the tables
+	BorderPane sessionsStartBtnsPane;
 	
-	public void start(Stage stage) throws Exception {
+	TableView<Sensor> heatFluxTable = new TableView<Sensor>(), externalTempTable = new TableView<Sensor>(), airTempTable = new TableView<Sensor>();
+	NumberAxis xAxis = new NumberAxis();
+	NumberAxis yAxis = new NumberAxis();
+	ScatterChart<Number,Number> chart = new ScatterChart<Number,Number>(xAxis,yAxis);
+	
+	public void start(Stage stage) throws Exception 
+	{
 		stage.setTitle("Sensor Reading App");
 		root = new Pane();
 		scene = new Scene(root, 1250, 950, Color.WHEAT);
@@ -152,89 +148,11 @@ public class Interface extends Application {
 	  	sessionTab.setClosable(false);
 	  	mainTabPane.getTabs().add(sessionTab);
 	  	
-	  	
+	  	//SessionPane held within the session tab
 	  	sessionPane = new Pane(); //within the sessionTab
 	  	sessionTab.setContent(sessionPane);
 	  	
-	  	// Start Button
-	  	start = new Button();
-	  	start.setText("Start");
-	  	start.setLayoutX(20);
-	  	start.setLayoutY(50);
-	  	start.setPrefWidth(100);
-	  	sessionPane.getChildren().add(start);
-	    start.setOnAction(new EventHandler<ActionEvent>() {
-	    	  public void handle(ActionEvent e) 
-	    	  {
-	    		  System.out.println("Start button pressed");
-	    	  }	  
-	      });
-	  	
-	  	// Stop Button
-	  	stop = new Button();
-	  	stop.setText("Stop");
-	  	stop.setLayoutX(150);
-		stop.setLayoutY(50);
-	  	stop.setPrefWidth(100);
-	  	sessionPane.getChildren().add(stop);
-	  	stop.setOnAction(new EventHandler<ActionEvent>() {
-	    	  public void handle(ActionEvent e) 
-	    	  {
-	    		  System.out.println("Stop button pressed");
-	    	  }	  
-	      });
-	  	
-	  	//sessionTab's tabpane and corresponding tabs
-	    sessionTabTabpane = new TabPane();
-	    sessionPane.getChildren().add(sessionTabTabpane);
-	    sessionTabTabpane.setLayoutX(20);
-	  	sessionTabTabpane.setLayoutY(100);
-	   
-	    heatTab = new Tab(); //heatFlux tab
-	  	heatTab.setText("Heat Flux Sensor");
-	  	heatTab.setClosable(false);
-	  	sessionTabTabpane.getTabs().add(heatTab);
-	  	
-	  	
-	  	externalTab = new Tab(); //externalTemp tab
-	  	externalTab.setText("External Temp Sensor");
-	  	externalTab.setClosable(false);
-	  	sessionTabTabpane.getTabs().add(externalTab);
-	  	
-	  	
-        airTab = new Tab(); //airTemp tab
-	  	airTab.setText("Air Temp Data");
-	  	airTab.setClosable(false);
-	  	sessionTabTabpane.getTabs().add(airTab);
-	  	
-	  	//temp test arrayList
-	  	ArrayList<Sensor> test = new ArrayList<Sensor>();
-	  	
-	  	heatFluxPane = new Pane();
-	  	heatTab.setContent(heatFluxPane);
-	  	heatFluxPane.getChildren().add(createTable("HeatFluxSensor"));
-	  	    
-	  	externalTempPane = new Pane();
-	  	externalTab.setContent(externalTempPane);
-	  	externalTempPane.getChildren().add(createTable("ExternalTempSensor"));
-        
-	  	airTempPane = new Pane();
-	  	airTab.setContent(airTempPane);
-	  	airTempPane.getChildren().add(createTable("AirTempSensor"));
-       
-	  	
-	  	// Graph
-        //View view = new View();
-		sessionPane.getChildren().add(chart);
-	  	xAxis.setLabel("Time");
-	  	yAxis.setLabel("Temperature");
-	  	chart.setTitle("Sensor's Graph");
-	  	chart.setLayoutX(700);
-	  	chart.setLayoutY(250);
-	  	//chart.setPrefWidth(30);
-	  	//chart.setPrefHeight(30);
-	  	
-	  	// Historical Data tab
+	    //Historical Data tab
 	  	historicalTab = new Tab();
 	  	historicalTab.setText("Historical Data");
 	  	historicalTab.setClosable(false);
@@ -243,30 +161,104 @@ public class Interface extends Application {
 	  	historicalPane = new Pane();
 	  	historicalTab.setContent(historicalPane);
 	  	
-	  	final Label label4 = new Label("  Search Between Dates");
-        label4.setFont(new Font("Arial", 20));
-        label4.setLayoutX(20);
-	  	label4.setLayoutY(50);
+	  	//<--Objects within the Session tab--
+	  	
+	  	// Start Button
+	  	start = new Button();
+	  	start.setText("Start");
+	  	start.setLayoutX(20);
+	  	start.setLayoutY(10);
+	  	start.setPrefWidth(100);
+	  	sessionPane.getChildren().add(start);
+	    start.setOnAction(new EventHandler<ActionEvent>() {
+	    	int x = 1; //temp counter                 <---------needs removing
+	    	  public void handle(ActionEvent e) 
+	    	  {
+	    		  System.out.println("Start button pressed");
+	    		  Calendar c = Calendar.getInstance();
+	    			java.util.Date now = c.getTime();
+	    			Timestamp ts =  new Timestamp(now.getTime());
+	    	        populateTable(new HeatFluxSensor(x, "test", "test", ts, x, x, x));
+	    	        x = x + 1;
+	    	  }	  
+	      });
+	  	
+	  	// Stop Button
+	  	stop = new Button();
+	  	stop.setText("Stop");
+	  	stop.setLayoutX(150);
+		stop.setLayoutY(10);
+	  	stop.setPrefWidth(100);
+	  	sessionPane.getChildren().add(stop);
+	  	stop.setOnAction(new EventHandler<ActionEvent>() {
+	    	  public void handle(ActionEvent e) 
+	    	  {
+	    		  System.out.println("Stop button pressed");
+	    		  drawChart(sensors);
+	    	  }	  
+	      });
+	  	
+	  	//sessionTab's tabpane and corresponding tabs
+	    sessionTabTabpane = new TabPane();
+	    sessionPane.getChildren().add(sessionTabTabpane);
+	    sessionTabTabpane.setLayoutX(0);
+	  	sessionTabTabpane.setLayoutY(50);
+	   
+	    heatTab = new Tab(); //heatFlux tab
+	  	heatTab.setText("Heat Flux Sensor");
+	  	heatTab.setClosable(false);
+	  	sessionTabTabpane.getTabs().add(heatTab);
+	  	
+	  	heatFluxPane = new Pane(); //heatFlux pane, held within the heat flux tab
+	  	heatTab.setContent(heatFluxPane);
+	  	heatFluxPane.getChildren().add(createTable("HeatFluxSensor", "Heat Flux Sensors"));
+	  	
+	  	
+	  	externalTab = new Tab(); //externalTemp tab
+	  	externalTab.setText("External Temp Sensor");
+	  	externalTab.setClosable(false);
+	  	sessionTabTabpane.getTabs().add(externalTab);
+	  	
+	  	externalTempPane = new Pane(); //externalTemp pane, held within the external temp tab
+	  	externalTab.setContent(externalTempPane);
+	  	externalTempPane.getChildren().add(createTable("ExternalTempSensor", "External Temperature Sensors"));
+	  	
+	  	
+        airTab = new Tab(); //airTemp tab
+	  	airTab.setText("Air Temp Data");
+	  	airTab.setClosable(false);
+	  	sessionTabTabpane.getTabs().add(airTab);  
         
+	  	airTempPane = new Pane(); //airTemp pane, held within the airTemp tab
+	  	airTab.setContent(airTempPane);
+	  	airTempPane.getChildren().add(createTable("AirTempSensor", "Air Temperature Sensors"));
+	  	
+       
+	  	
+	  	// Graph                   <--------- Create a new method to create a graph for each table??????
+		sessionPane.getChildren().add(chart);
+	  	xAxis.setLabel("Time");
+	  	yAxis.setLabel("Temperature");
+	  	chart.setTitle("Sensor's Graph");
+	  	chart.setLayoutX(700);
+	  	chart.setLayoutY(250);
+	  	
+	  	
+	    //<--Objects within the HistoricalData tab-->
+	  	
 	  	// Start Date Text Field
         startTextField = new TextField();
         startTextField.setPrefWidth(120);
-	 	//start = new Button();
         startTextField.setText("Start Date");
         startTextField.setLayoutX(60);
         startTextField.setLayoutY(120);
-	  	//startTextField.setPrefWidth(100);
-	  	//startTextField.setPrefHeight(150);
 	  	
         //End Date Text Field
         endTextField = new TextField();
         endTextField.setPrefWidth(120);
-	 	//start = new Button();
         endTextField.setText("End Date");
         endTextField.setLayoutX(250);
         endTextField.setLayoutY(120);
-	  	//endTextField.setPrefWidth(100);
-	  	//endTextField.setPrefHeight(150);
         
         // Search Button in Historical tab to search between dates
         search = new Button();
@@ -274,38 +266,35 @@ public class Interface extends Application {
         search.setLayoutX(165);
         search.setLayoutY(180);
 	  	search.setPrefWidth(100);
-	  	//search.setPrefHeight(150);
         
-        historicalPane.getChildren().addAll(label4, startTextField, endTextField, search);
+        historicalPane.getChildren().addAll(startTextField, endTextField, search);
 	  	
 	  	stage.show();
 	}
 
-	
-	
-
-	NumberAxis xAxis = new NumberAxis();
-	NumberAxis yAxis = new NumberAxis();
-	ScatterChart<Number,Number> chart = new ScatterChart<Number,Number>(xAxis,yAxis);
-	//Interface interface = new Interface();
-
-	public void drawChart(ArrayList<Customer> customers)
+	@SuppressWarnings("rawtypes")
+	public void drawChart(ArrayList<Sensor> sensors)
 	{
 		chart.getData().clear();
 		XYChart.Series series = new XYChart.Series();
-		series.setName("Model Data");
-		for(Customer c : customers)
-		series.getData().add(new XYChart.Data(c.age, c.balance));
+		XYChart.Series series2 = new XYChart.Series();
+		//series.setName("Model Data");
+		for(Sensor sensor : sensors)
+		{
+		    //series.getData().add(new XYChart.Data(((List<MenuItem>) sensor.getTimestamp()).get(Calendar.MINUTE), sensor.getSensorID()));
+		    series2.getData().add(new XYChart.Data(sensor.getTimestamp().getSeconds() + 10, sensor.getSensorID()));
+		}
 		chart.getData().add(series);
+		chart.getData().add(series2);
 	
 	}
 	
-	public VBox createTable(String sensorType)
-	{		
-	  	final Label lblTableName = new Label("Heat Flux Sensor");
+	@SuppressWarnings("rawtypes")
+	public VBox createTable(String sensorType, String tableName)
+	{	
+		Label lblTableName = new Label(tableName);
         lblTableName.setFont(new Font("Arial", 20));
-	  	heatTable.setEditable(true);
-
+		
 	  	TableColumn sensorID = new TableColumn("Sensor ID");
 	  	TableColumn sensorName = new TableColumn("Sensor Name");
 	  	TableColumn timestamp = new TableColumn("Time Stamp");
@@ -313,7 +302,7 @@ public class Interface extends Application {
 	  	TableColumn surfaceTemp = new TableColumn("Surface Temp Data");
 	  	TableColumn airData = new TableColumn("Air Temp Data");
         
-        
+	  	
         sensorID.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorID"));
         sensorName.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorName"));
         timestamp.setCellValueFactory(new PropertyValueFactory<Sensor, Timestamp>("timestamp"));
@@ -326,57 +315,74 @@ public class Interface extends Application {
             surfaceTemp.setCellValueFactory(new PropertyValueFactory<Sensor, String>("internalWallSurfaceTemp"));
         }
         airData.setCellValueFactory(new PropertyValueFactory<Sensor, String>("internalAirTemp"));
-  
         
         if (sensorType.equals("AirTempSensor"))
         {
-            heatTable.getColumns().addAll(sensorID, sensorName, timestamp, airData);
+            airTempTable.getColumns().addAll(sensorID, sensorName, timestamp, airData);
         } else if (sensorType.equals("ExternalTempSensor"))
         {
-        	heatTable.getColumns().addAll(sensorID, sensorName, timestamp, surfaceTemp, airData);
+        	externalTempTable.getColumns().addAll(sensorID, sensorName, timestamp, surfaceTemp, airData);
         } else if (sensorType.equals("HeatFluxSensor"))
         {
-        	heatTable.getColumns().addAll(sensorID, sensorName, timestamp, heatData, surfaceTemp, airData);
+        	heatFluxTable.getColumns().addAll(sensorID, sensorName, timestamp, heatData, surfaceTemp, airData);
         }
-        
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(lblTableName, heatTable);
-        vbox.setLayoutX(0);
-	  	vbox.setLayoutY(100);
 	  	vbox.setPrefWidth(680);
-        
+	  	
+	  	if (sensorType.equals("AirTempSensor"))
+        {
+	  		vbox.getChildren().addAll(lblTableName, airTempTable);
+        } else if (sensorType.equals("ExternalTempSensor"))
+        {
+        	vbox.getChildren().addAll(lblTableName, externalTempTable);
+        } else if (sensorType.equals("HeatFluxSensor"))
+        {
+        	vbox.getChildren().addAll(lblTableName, heatFluxTable);
+        }
         return vbox;
 	}
 	
 	public void populateTable(Sensor sensor)
 	{
-		Calendar c = Calendar.getInstance();
-		java.util.Date now = c.getTime();
-		Timestamp ts =  new Timestamp(now.getTime());
+		sensors.add(sensor);
 		
+		ArrayList<Sensor> heatFluxSensors = new ArrayList<Sensor>(), externalTempSensors = new ArrayList<Sensor>(), airTempSensors = new ArrayList<Sensor>();
 		
-		//Heat Flux data table
-	  	TableView<Sensor> heatTable = new TableView<Sensor>();
-	  	ObservableList<Sensor> heatSensorData = FXCollections.observableArrayList(sensor);
-	}
-
-
-class Customer {
-		String name;
-		int age;
-		double balance;
-	
-		public Customer(String name, int age, double balance) {
-		super();
-		this.name = name;
-		this.age = age;
-		this.balance = balance;
+		for (Sensor currentSensor : sensors)
+		{
+			if (currentSensor instanceof AirTempSensor)
+			{
+				airTempSensors.add(currentSensor);
+			} else if (currentSensor instanceof ExternalTempSensor)
+			{
+				externalTempSensors.add(currentSensor);
+			} else if (currentSensor instanceof HeatFluxSensor)
+			{
+				heatFluxSensors.add(currentSensor);
+			}
+		}
+			
+		if (sensor instanceof AirTempSensor)
+		{
+			ObservableList<Sensor> tableData = FXCollections.observableArrayList(airTempSensors);
+			airTempTable.setItems(tableData);
+		} else if (sensor instanceof ExternalTempSensor)
+		{
+			ObservableList<Sensor> tableData = FXCollections.observableArrayList(externalTempSensors);
+			externalTempTable.setItems(tableData);
+		} else if (sensor instanceof HeatFluxSensor)
+		{
+			ObservableList<Sensor> tableData = FXCollections.observableArrayList(heatFluxSensors);
+			heatFluxTable.setItems(tableData);
+		}
 	}
 }
 
-}
+
+
+
 
 
 
