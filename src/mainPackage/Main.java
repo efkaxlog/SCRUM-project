@@ -1,3 +1,5 @@
+package mainPackage;
+
 import java.sql.SQLException;
 
 public class Main {

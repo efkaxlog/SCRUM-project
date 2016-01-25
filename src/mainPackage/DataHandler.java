@@ -1,7 +1,10 @@
+package mainPackage;
 
 //import ArduinoConnection.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import database.Database;
 import sensors.*;
 
 import java.sql.SQLException;

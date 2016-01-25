@@ -1,3 +1,4 @@
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -141,7 +142,7 @@ public class Database {
 				sensorDataString = sb.append(value + ",").toString();
 			}
 			// remove last character because it's a comma
-			sensorDataString = Utilities.removeLastChar(sensorDataString);
+			sensorDataString = mainPackage.Utilities.removeLastChar(sensorDataString);
 			sensorStrings.add(sensorDataString);
 
 		}

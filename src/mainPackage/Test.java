@@ -1,6 +1,8 @@
+package mainPackage;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import database.Database;
 import sensors.*;
 
 public class Test {
