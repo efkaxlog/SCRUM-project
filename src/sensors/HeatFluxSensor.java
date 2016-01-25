@@ -2,48 +2,48 @@ package sensors;
 
 public class HeatFluxSensor extends Sensor {
 
-	private float heatFluxTemp, internalWallSurfaceTemp, internalAirTemp;
+	private float heatFluxData, surfaceTemp, airTemp;
 
-	public HeatFluxSensor(int sensorID, String sensorName, String sensorType, float heatFluxTemp,
-			float internalWallSurfaceTemp, float internalAirTemp) {
+	public HeatFluxSensor(int sensorID, String sensorName, String sensorType, 
+			float heatFluxData, float surfaceTemp, float airTemp) {
 
 		super(sensorID, sensorName, sensorType);
-		this.heatFluxTemp = heatFluxTemp;
-		this.internalWallSurfaceTemp = internalWallSurfaceTemp;
-		this.internalAirTemp = internalAirTemp;
+		this.heatFluxData = heatFluxData;
+		this.surfaceTemp = surfaceTemp;
+		this.airTemp = airTemp;
 	}
 
-	public float getHeatFluxTemp() {
-		return heatFluxTemp;
+	public float getHeatFluxData() {
+		return heatFluxData;
 	}
 
-	public void setHeatFluxTemp(float heatFluxTemp) {
-		this.heatFluxTemp = heatFluxTemp;
+	public void setHeatFluxData(float heatFluxData) {
+		this.heatFluxData = heatFluxData;
 	}
 
-	public float getInternalWallSurfaceTemp() {
-		return internalWallSurfaceTemp;
+	public float getSurfaceTemp() {
+		return surfaceTemp;
 	}
 
-	public void setInternalWallSurfaceTemp(float internalWallSurfaceTemp) {
-		this.internalWallSurfaceTemp = internalWallSurfaceTemp;
+	public void setSurfaceTemp(float surfaceTemp) {
+		this.surfaceTemp = surfaceTemp;
 	}
 
-	public float getInternalAirTemp() {
-		return internalAirTemp;
+	public float getAirTemp() {
+		return airTemp;
 	}
 
-	public void setInternalAirTemp(float internalAirTemp) {
-		this.internalAirTemp = internalAirTemp;
+	public void setAirTemp(float airTemp) {
+		this.airTemp = airTemp;
 	}
 
 	public void printDetails() {
 		System.out.println("-------------------------");
 		System.out.println("Class: " + getClass().getSimpleName());
 		super.printDetails();
-		System.out.println("Heat Flux Temperature: " + heatFluxTemp);
-		System.out.println("Internal Wall Surface Temperature: " + internalWallSurfaceTemp);
-		System.out.println("Internal Air Temperature: " + internalAirTemp);
+		System.out.println("Heat Flux Temperature: " + heatFluxData);
+		System.out.println("Internal Wall Surface Temperature: " + surfaceTemp);
+		System.out.println("Internal Air Temperature: " + airTemp);
 
 	}
 

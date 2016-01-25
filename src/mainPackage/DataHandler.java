@@ -8,10 +8,9 @@ import java.util.Scanner;
 
 import database.Database;
 import database.FlatFileDatabase;
-import sensors.AirTempSensor;
-import sensors.ExternalTempSensor;
 import sensors.HeatFluxSensor;
 import sensors.Sensor;
+import sensors.TemperatureSensor;
 
 public class DataHandler {
 	// Connection connection;
@@ -55,15 +54,15 @@ public class DataHandler {
 	}
 
 	public void handleObject(String dataString, boolean isDataFromArduino) {
-//		Sensor sensor = makeSensor(dataString, isDataFromArduino);
-//		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
-		try {
-			database.insertSensorIntoTable(makeSensor(dataString, isDataFromArduino));
-		} catch (SQLException e) {
-			System.out.println("Failed to insert sensor into table.");
-			System.out.println("Data string: " + dataString);
-			e.printStackTrace();
-		}
+		Sensor sensor = makeSensor(dataString, isDataFromArduino);
+		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
+//		try {
+//			database.insertSensorIntoTable(makeSensor(dataString, isDataFromArduino));
+//		} catch (SQLException e) {
+//			System.out.println("Failed to insert sensor into table.");
+//			System.out.println("Data string: " + dataString);
+//			e.printStackTrace();
+//		}
 	}
 
 	public Sensor makeSensor(String dataString, boolean isDataFromArduino) {
@@ -74,22 +73,15 @@ public class DataHandler {
 		String sensorType = scanner.next();
 		String sensorName = scanner.next();
 
-		if (sensorName.equals("heat_flux1")) {
-			float heatFluxTemp = scanner.nextFloat();
-			float internalWallSurfaceTemp = scanner.nextFloat();
-			float airTempData = scanner.nextFloat();
-
-			sensor = new HeatFluxSensor(id, sensorName, sensorType, heatFluxTemp, internalWallSurfaceTemp, airTempData);
-
-		} else if (sensorName.equals("Ext Temp")) {
-			float externalSurfaceTemp = scanner.nextFloat();
-			float airTempData = scanner.nextFloat();
-			sensor = new ExternalTempSensor(id, sensorName, sensorType, externalSurfaceTemp, airTempData);
-
+		if (sensorType.equals("HFT")) {
+			float heatFluxData = scanner.nextFloat();
+			float surfaceTemp = scanner.nextFloat();
+			float airTemp = scanner.nextFloat();
+			sensor = new HeatFluxSensor(id, sensorName, sensorType, heatFluxData, surfaceTemp, airTemp);
 		} else {
-			float airTempData = scanner.nextFloat();
-			sensor = new AirTempSensor(id, sensorName, sensorType, airTempData);
-			scanner.next(); // QUICK FIX FOR BUG, DELETE LATER
+			float airTemp = scanner.nextFloat();
+			float surfaceTemp = scanner.nextFloat();
+			sensor = new TemperatureSensor(id, sensorName, sensorType, airTemp, surfaceTemp);
 		}
 		
 		Timestamp ts;

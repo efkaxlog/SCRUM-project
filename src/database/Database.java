@@ -11,10 +11,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import sensors.AirTempSensor;
-import sensors.ExternalTempSensor;
 import sensors.HeatFluxSensor;
 import sensors.Sensor;
+import sensors.TemperatureSensor;
 
 public class Database {
 	static Connection connection;
@@ -85,16 +84,13 @@ public class Database {
 		// repeating ifs, and some dirty type casting, fix later
 		if (sensorName.equals("heat_flux1")) {
 			HeatFluxSensor s = ((HeatFluxSensor) sensor);
-			ps.setFloat(5, s.getHeatFluxTemp());
-			ps.setFloat(6, s.getInternalAirTemp());
-			ps.setFloat(7, s.getInternalWallSurfaceTemp());
-		} else if (sensorName.equals("Ext Temp")) {
-			ExternalTempSensor s = ((ExternalTempSensor) sensor);
-			ps.setFloat(5, s.getExternalSurfaceTemp());
-			ps.setFloat(6, s.getExternalAirTemp());
-		} else if (sensorName.equals("Int Temp")) {
-			AirTempSensor s = ((AirTempSensor) sensor);
+			ps.setFloat(5, s.getHeatFluxData());
+			ps.setFloat(6, s.getAirTemp());
+			ps.setFloat(7, s.getSurfaceTemp());
+		} else {
+			TemperatureSensor s = ((TemperatureSensor) sensor);
 			ps.setFloat(5, s.getAirTemp());
+			ps.setFloat(6, s.getSurfaceTemp());
 		}
 		ps.executeUpdate();
 	}

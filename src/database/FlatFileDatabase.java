@@ -23,7 +23,7 @@ public class FlatFileDatabase {
 	
 	private void setUpFileNames() {
 		fileNames.put("heat_flux1", "Heat Flux Data.txt");
-		fileNames.put("Int Temp", "Air Temp Data.txt");
+		fileNames.put("Int Temp", "Internal Temp Data.txt");
 		fileNames.put("Ext Temp", "External Temp Data.txt");
 	}
 	
