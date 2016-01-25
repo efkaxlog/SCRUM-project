@@ -6,15 +6,22 @@ import database.Database;
 import sensors.*;
 
 public class Test {
-
-	Database db = new Database();
+	
+	DataHandler dh = new DataHandler();
 
 	public Test() throws SQLException {
-		testGettingSensorStringsFromDB("all");
+		testGettingSensorsFromFileDB("all");
+	}
+	
+	public void testGettingSensorsFromFileDB(String sensorName) {
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>(dh.makeSensorsFromFiles(sensorName));
+		for (Sensor s : sensors) {
+			s.printDetails();
+		}
 	}
 
 	public void testGettingSensorStringsFromDB(String tableName) throws SQLException {
-		DataHandler dh = new DataHandler();
+		
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>(dh.makeSensorsFromDB(tableName));
 		for (Sensor s : sensors) {
 			s.printDetails();

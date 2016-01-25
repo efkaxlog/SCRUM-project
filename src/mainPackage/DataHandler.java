@@ -1,21 +1,26 @@
 package mainPackage;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
 //import ArduinoConnection.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import database.Database;
-import sensors.*;
-
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import database.FlatFileDatabase;
+import sensors.AirTempSensor;
+import sensors.ExternalTempSensor;
+import sensors.HeatFluxSensor;
+import sensors.Sensor;
 
 public class DataHandler {
 	// Connection connection;
 	Database database;
+	FlatFileDatabase fileDatabase;
 
 	public DataHandler() {
 		database = new Database();
+		fileDatabase = new FlatFileDatabase();
 	}
 
 	// fetches the data from the database class
@@ -37,8 +42,21 @@ public class DataHandler {
 		}
 		return sensors;
 	}
+	
+	public ArrayList<Sensor> makeSensorsFromFiles(String sensorName) {
+		ArrayList<String> sensorDataStrings = new ArrayList<String>();
+		fileDatabase.addSensorStrings(sensorName, sensorDataStrings);
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		boolean isDataFromArduino = false;
+		for (String sensorData : sensorDataStrings) {
+			sensors.add(makeSensor(sensorData, isDataFromArduino));
+		}
+		return sensors;	
+	}
 
 	public void handleObject(String dataString, boolean isDataFromArduino) {
+//		Sensor sensor = makeSensor(dataString, isDataFromArduino);
+//		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
 		try {
 			database.insertSensorIntoTable(makeSensor(dataString, isDataFromArduino));
 		} catch (SQLException e) {
@@ -71,6 +89,7 @@ public class DataHandler {
 		} else {
 			float airTempData = scanner.nextFloat();
 			sensor = new AirTempSensor(id, sensorName, sensorType, airTempData);
+			scanner.next(); // QUICK FIX FOR BUG, DELETE LATER
 		}
 		
 		Timestamp ts;
@@ -81,6 +100,7 @@ public class DataHandler {
 		}
 		sensor.setTimestamp(ts);
 		scanner.close();
+		sensor.printDetails();
 		return sensor;
 	}
 
