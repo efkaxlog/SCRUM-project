@@ -63,24 +63,30 @@ public class Interface extends Application {
 		  
 		  MenuItem MINew = new MenuItem("New");
 	      fileMenu.getItems().add(MINew);
-	      MINew.setOnAction(new EventHandler<ActionEvent>() {
-	    	  public void handle(ActionEvent e) {
+	      MINew.setOnAction(new EventHandler<ActionEvent>() 
+	      {
+	    	  public void handle(ActionEvent e) 
+	    	  {
 	    		  System.out.println("!test");
 	    	  }
 	      });
 	      
 	      MenuItem MISave = new MenuItem("Save");
 	      fileMenu.getItems().add(MISave);
-	      MISave.setOnAction(new EventHandler<ActionEvent>() {
-	    	  public void handle(ActionEvent e) {
+	      MISave.setOnAction(new EventHandler<ActionEvent>() 
+	      {
+	    	  public void handle(ActionEvent e) 
+	    	  {
 	    		
 	    	  }	  
 	      });
 	      
 	      MenuItem MIAbout = new MenuItem("About");
 	      fileMenu.getItems().add(MIAbout);
-	      MIAbout.setOnAction(new EventHandler<ActionEvent>() {
-	    	  public void handle(ActionEvent e) {
+	      MIAbout.setOnAction(new EventHandler<ActionEvent>() 
+	      {
+	    	  public void handle(ActionEvent e) 
+	    	  {
 	    		  //JOptionPane.showMessageDialog(this, "Inventory App Version 0.1");
 	    		  Alert alert = new Alert(AlertType.INFORMATION);
 	    		  alert.setTitle("Version");
@@ -128,6 +134,10 @@ public class Interface extends Application {
 	ScatterChart<Number,Number> heatFluxChart = new ScatterChart<Number,Number>(heatFluxXAxis,heatFluxYAxis);
 	ScatterChart<Number,Number> externalTempChart = new ScatterChart<Number,Number>(externalTempXAxis,externalTempYAxis);
 	ScatterChart<Number,Number> airTempChart = new ScatterChart<Number,Number>(airTempXAxis,airTempYAxis);
+	XYChart.Series heatFluxSenAirTempSeries = new XYChart.Series(), heatFluxSenSurfaceTempSeries = new XYChart.Series(),
+			heatFluxSenFlxSeries = new XYChart.Series(), externalTempSenAirTempSeries = new XYChart.Series(),
+		    externalTempSenSurfaceTempSeries = new XYChart.Series(), airTempSenAirTempSeries = new XYChart.Series(),
+		    airTempSenSurfaceTempSeries = new XYChart.Series();
 	CheckBox heatFluxCheckAirTemp, heatFluxCheckSurfaceTemp, heatFluxCheckFlux;
 	CheckBox externalTempCheckAirTemp, externalTempCheckSurfaceTemp;
 	CheckBox airTempCheckAirTemp, airTempCheckSurfaceTemp;
@@ -208,7 +218,7 @@ public class Interface extends Application {
 	    	  public void handle(ActionEvent e) 
 	    	  {
 	    		  System.out.println("Stop button pressed");
-	    		  drawChart(heatFluxTableData);
+	    		  //drawChart(heatFluxTableData);
 	    	  }	  
 	      });
 	  	
@@ -249,6 +259,8 @@ public class Interface extends Application {
 	  	heatFluxCheckFlux.setLayoutX(1050);
 	  	heatFluxCheckFlux.setLayoutY(420);
 	  	heatFluxPane.getChildren().addAll(heatFluxCheckAirTemp, heatFluxCheckSurfaceTemp, heatFluxCheckFlux);
+	  
+	  	
 	  	
 	  	
 	  	externalTab = new Tab(); //externalTemp tab
@@ -307,6 +319,56 @@ public class Interface extends Application {
 	  	airTempPane.getChildren().addAll(airTempCheckAirTemp, airTempCheckSurfaceTemp);
 	  	
 	  	
+	  //Checkbox handler
+	  	EventHandler checkboxCheck = new EventHandler<ActionEvent>() {
+	  	    @Override
+	  	    public void handle(ActionEvent event) 
+	  	    {
+	  	        if (event.getSource() instanceof CheckBox) 
+	  	        {
+	  	            CheckBox chk = (CheckBox) event.getSource();
+	  	            System.out.println("Action performed on checkbox " + chk.getText());
+	  	            if (heatFluxCheckAirTemp.isSelected()) 
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckAirTemp");
+	  	            	heatFluxChart.getData().add(heatFluxSenAirTempSeries);
+	  	            } else if (heatFluxCheckSurfaceTemp.isSelected())
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckSurfaceTemp");
+	  	            	heatFluxChart.getData().add(heatFluxSenSurfaceTempSeries);
+	  	            } else if (heatFluxCheckFlux.isSelected())
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckFlux");
+	  	            	heatFluxChart.getData().add(heatFluxSenFlxSeries);
+	  	            } else if (externalTempCheckAirTemp.isSelected())
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckFlux");
+	  	            	heatFluxChart.getData().add(externalTempSenAirTempSeries);
+	  	            } else if (externalTempCheckSurfaceTemp.isSelected())
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckFlux");
+	  	            	heatFluxChart.getData().add(externalTempSenSurfaceTempSeries);
+	  	            } else if (airTempCheckAirTemp.isSelected())
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckFlux");
+	  	            	heatFluxChart.getData().add(airTempSenAirTempSeries);
+	  	            } else if (airTempCheckSurfaceTemp.isSelected())
+	  	            {
+	  	            	drawChart(heatFluxTableData, "heatFluxCheckFlux");
+	  	            	heatFluxChart.getData().add(airTempSenSurfaceTempSeries);
+	  	            }
+	  	        }
+	  	    }
+	  	};
+	  	
+	  	heatFluxCheckAirTemp.setOnAction(checkboxCheck);
+	  	heatFluxCheckSurfaceTemp.setOnAction(checkboxCheck);
+	  	heatFluxCheckFlux.setOnAction(checkboxCheck);
+	  	externalTempCheckAirTemp.setOnAction(checkboxCheck);
+	  	externalTempCheckSurfaceTemp.setOnAction(checkboxCheck);
+	  	airTempCheckAirTemp.setOnAction(checkboxCheck);
+	  	airTempCheckSurfaceTemp.setOnAction(checkboxCheck);
+	  	
 	    //<--Objects within the HistoricalData tab-->
 	  	
 	  	// Start Date Text Field
@@ -336,18 +398,56 @@ public class Interface extends Application {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void drawChart(ObservableList<Sensor> tableData)
+	public void drawChart(ObservableList<Sensor> tableData, String seriesType)
 	{
+		double period = 0;
 		heatFluxChart.getData().clear();
-		XYChart.Series series = new XYChart.Series();
+		
 		//XYChart.Series series2 = new XYChart.Series();
 		//series.setName("Model Data");
+		
 		for(Sensor sensor : tableData)
 		{
-		    series.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), sensor.getSensorID()));  //<------needs changing 
+			//if (periodComboBox == time) dropdown
+			//{
+			//period= sensor.getTimeStamp().getMinutes();
+			//}
+			
+			if (seriesType.equals("heatFluxSenAirTempSeries"))
+			{
+				HeatFluxSensor heatFluxSensor = (HeatFluxSensor) sensor;
+				heatFluxSenAirTempSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), heatFluxSensor.getAirTemp()));
+			} else if (seriesType.equals("heatFluxSenSurfaceTempSeries"))
+			{
+				HeatFluxSensor heatFluxSensor = (HeatFluxSensor) sensor;
+				heatFluxSenSurfaceTempSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), heatFluxSensor.getSurfaceTemp()));
+			} else if (seriesType.equals("heatFluxSenFlxSeries"))
+			{
+				HeatFluxSensor heatFluxSensor = (HeatFluxSensor) sensor;
+				heatFluxSenFlxSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), heatFluxSensor.getHeatFluxData()));
+			} else if (seriesType.equals("externalTempSenAirTempSeries"))
+			{
+				TemperatureSensor tempSensor = (TemperatureSensor) sensor;
+				externalTempSenAirTempSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), tempSensor.getAirTemp()));
+			} else if (seriesType.equals("externalTempSenSurfaceTempSeries"))
+			{
+				TemperatureSensor tempSensor = (TemperatureSensor) sensor;
+				externalTempSenSurfaceTempSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), tempSensor.getSurfaceTemp()));
+			} else if (seriesType.equals("airTempSenAirTempSeries"))
+			{
+				TemperatureSensor tempSensor = (TemperatureSensor) sensor;
+				airTempSenAirTempSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), tempSensor.getAirTemp()));
+			} else if (seriesType.equals("airTempSenSurfaceTempSeries"))
+			{
+				TemperatureSensor tempSensor = (TemperatureSensor) sensor;
+				airTempSenSurfaceTempSeries.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), tempSensor.getSurfaceTemp()));
+			}
+			
+			
+		    //series.getData().add(new XYChart.Data(sensor.getTimestamp().getMinutes(), sensor.getSensorID()));  //<------needs changing 
 		    //series2.getData().add(new XYChart.Data(sensor.getTimestamp().getSeconds() + 10, sensor.getSensorID()));
 		}
-		heatFluxChart.getData().add(series);
+		
 		//heatFluxChart.getData().add(series2);
 	
 	}
