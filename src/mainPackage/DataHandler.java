@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import database.Database;
 import database.FlatFileDatabase;
+import gui.Interface;
 import sensors.HeatFluxSensor;
 import sensors.Sensor;
 import sensors.TemperatureSensor;
@@ -56,6 +57,7 @@ public class DataHandler {
 	public void handleObject(String dataString, boolean isDataFromArduino) {
 		Sensor sensor = makeSensor(dataString, isDataFromArduino);
 		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
+		Interface.populateTable(sensor);
 	}
 
 	public Sensor makeSensor(String dataString, boolean isDataFromArduino) {
