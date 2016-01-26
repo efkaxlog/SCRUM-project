@@ -2,6 +2,7 @@
 package mainPackage;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import gnu.io.CommPortIdentifier;
@@ -13,7 +14,7 @@ import java.util.Enumeration;
 public class ArduinoConnector implements SerialPortEventListener {
 
 	private DataHandler dataHandler = new DataHandler();
-	SerialPort serialPort;
+	static SerialPort serialPort;
 	/** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // OSX
 			"/dev/ttyACM0", // Raspberry Pi
@@ -80,11 +81,12 @@ public class ArduinoConnector implements SerialPortEventListener {
 	 * This should be called when you stop using the port. This will prevent
 	 * port locking on platforms like Linux.
 	 */
-	public synchronized void close() {
+	public static synchronized void close() {
 		if (serialPort != null) {
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
+		System.out.println("Stopped reading");
 	}
 
 	/**
