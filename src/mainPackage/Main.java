@@ -2,10 +2,11 @@ package mainPackage;
 
 import gui.Interface;
 import javafx.application.Application;
+import javafx.stage.Stage;
 
 public class Main {
 	
-	static Interface gui;
+	Interface gui;
 	
 
 	/**
@@ -14,15 +15,14 @@ public class Main {
 	 */
 	
 	public Main() {
-		
+		 gui = new Interface();
+		 gui.launch(gui.getClass());
 	}
 	
 	
 	
 	public static void main(String[] args) {
-		
-		gui = new Interface();
-		gui.runGUI(args);
+		Main main = new Main();
 	}
 
 }

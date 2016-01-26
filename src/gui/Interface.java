@@ -42,17 +42,8 @@ import sensors.TemperatureSensor;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+
 public class Interface extends Application {
-	
-	  // Constructor
-	  public Interface() 
-	  {
-		  
-	  }
-	  
-	  public void runGUI(String[] args) {
-		  launch(args);
-	  }
 	  
 	  private MenuBar buildMenuBarWithMenus(final ReadOnlyDoubleProperty menuWidthProperty)
 	  {
@@ -120,12 +111,22 @@ public class Interface extends Application {
 			heatFluxTableData = FXCollections.observableArrayList(); //ArrayList which holds the values of all sensors in the tables
 	BorderPane sessionsStartBtnsPane;
 	
-	TableView<Sensor> heatFluxTable = new TableView<Sensor>(), externalTempTable = new TableView<Sensor>(), airTempTable = new TableView<Sensor>();
-	NumberAxis heatFluxXAxis = new NumberAxis(), externalTempXAxis = new NumberAxis(), airTempXAxis = new NumberAxis();
-	NumberAxis heatFluxYAxis = new NumberAxis(), externalTempYAxis = new NumberAxis(), airTempYAxis = new NumberAxis();
-	ScatterChart<Number,Number> heatFluxChart = new ScatterChart<Number,Number>(heatFluxXAxis,heatFluxYAxis);
-	ScatterChart<Number,Number> externalTempChart = new ScatterChart<Number,Number>(externalTempXAxis,externalTempYAxis);
-	ScatterChart<Number,Number> airTempChart = new ScatterChart<Number,Number>(airTempXAxis,airTempYAxis);
+//	TableView<Sensor> heatFluxTable = new TableView<Sensor>(), externalTempTable = new TableView<Sensor>(), airTempTable = new TableView<Sensor>();
+//	NumberAxis heatFluxXAxis = new NumberAxis(), externalTempXAxis = new NumberAxis(), airTempXAxis = new NumberAxis();
+//	NumberAxis heatFluxYAxis = new NumberAxis(), externalTempYAxis = new NumberAxis(), airTempYAxis = new NumberAxis();
+//	ScatterChart<Number,Number> heatFluxChart = new ScatterChart<Number,Number>(heatFluxXAxis,heatFluxYAxis);
+//	ScatterChart<Number,Number> externalTempChart = new ScatterChart<Number,Number>(externalTempXAxis,externalTempYAxis);
+//	ScatterChart<Number,Number> airTempChart = new ScatterChart<Number,Number>(airTempXAxis,airTempYAxis);
+//	CheckBox heatFluxCheckAirTemp, heatFluxCheckSurfaceTemp, heatFluxCheckFlux;
+//	CheckBox externalTempCheckAirTemp, externalTempCheckSurfaceTemp;
+//	CheckBox airTempCheckAirTemp, airTempCheckSurfaceTemp;
+	
+	TableView<Sensor> heatFluxTable, externalTempTable, airTempTable; 
+	NumberAxis heatFluxXAxis, externalTempXAxis, airTempXAxis; 
+	NumberAxis heatFluxYAxis, externalTempYAxis, airTempYAxis; 
+	ScatterChart<Number,Number> heatFluxChart;// = new ScatterChart<Number,Number>(heatFluxXAxis,heatFluxYAxis);
+	ScatterChart<Number,Number> externalTempChart; //= new ScatterChart<Number,Number>(externalTempXAxis,externalTempYAxis);
+	ScatterChart<Number,Number> airTempChart; // = new ScatterChart<Number,Number>(airTempXAxis,airTempYAxis);
 	CheckBox heatFluxCheckAirTemp, heatFluxCheckSurfaceTemp, heatFluxCheckFlux;
 	CheckBox externalTempCheckAirTemp, externalTempCheckSurfaceTemp;
 	CheckBox airTempCheckAirTemp, airTempCheckSurfaceTemp;
@@ -133,6 +134,25 @@ public class Interface extends Application {
 	
 	public void start(Stage stage) throws Exception 
 	{
+		//START 
+		heatFluxTable = new TableView<Sensor>(); 
+		externalTempTable = new TableView<Sensor>(); 
+		airTempTable = new TableView<Sensor>();
+		
+		heatFluxXAxis = new NumberAxis(); 
+		externalTempXAxis = new NumberAxis();
+		airTempXAxis = new NumberAxis();
+		
+		heatFluxYAxis = new NumberAxis(); 
+		externalTempYAxis = new NumberAxis();
+		airTempYAxis = new NumberAxis();
+		
+		heatFluxChart = new ScatterChart<Number,Number>(heatFluxXAxis,heatFluxYAxis);
+		externalTempChart = new ScatterChart<Number,Number>(externalTempXAxis,externalTempYAxis);
+		airTempChart = new ScatterChart<Number,Number>(airTempXAxis,airTempYAxis);
+		//END
+		
+		
 		stage.setTitle("Sensor Reading App");
 		root = new Pane();
 		scene = new Scene(root, 1250, 950, Color.WHEAT);
