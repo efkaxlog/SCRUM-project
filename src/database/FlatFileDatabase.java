@@ -30,7 +30,17 @@ public class FlatFileDatabase {
 	private String getSensorFilepath(String sensorName) {
 		String filename = dataFolder + fileNames.get(sensorName);
 		File file = new File(filename);
-		System.out.println(sensorName);
+		if(!file.exists()) {
+			System.out.println("Creating file " + file.getAbsolutePath());
+			try {
+				// create data directory and file
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			} catch (IOException e) {
+				System.out.println("Fatal error when creating file " + file.getAbsolutePath());
+				e.printStackTrace();
+			}
+		}
 		return file.getAbsolutePath();
 	}
 	
@@ -50,7 +60,6 @@ public class FlatFileDatabase {
 	public void addSensorsStringsFromFile(String sensorName, ArrayList<String> sensorStrings) {
 		try {
 			File sensorFile = new File(getSensorFilepath(sensorName));
-			System.out.println(getSensorFilepath(sensorName));
 			FileInputStream fis = new FileInputStream(sensorFile);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 			String dataString = null;
@@ -77,8 +86,6 @@ public class FlatFileDatabase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 }
