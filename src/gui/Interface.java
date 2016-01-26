@@ -43,19 +43,17 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 public class Interface extends Application {
-	 public static void main(String[] args) 
-	 {
-		launch(args);
-
-     }  
 	
 	  // Constructor
 	  public Interface() 
-	  
 	  {
-			
+		  
 	  }
-	
+	  
+	  public void runGUI(String[] args) {
+		  launch(args);
+	  }
+	  
 	  private MenuBar buildMenuBarWithMenus(final ReadOnlyDoubleProperty menuWidthProperty)
 	  {
 		  final MenuBar menuBar = new MenuBar();

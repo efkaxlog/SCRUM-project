@@ -1,16 +1,28 @@
 package mainPackage;
 
-import java.sql.SQLException;
+import gui.Interface;
+import javafx.application.Application;
 
 public class Main {
+	
+	static Interface gui;
+	
 
 	/**
 	 * @param args
 	 * @throws SQLException
 	 */
-	public static void main(String[] args) throws SQLException {
-		Test test = new Test();
-
+	
+	public Main() {
+		
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		
+		gui = new Interface();
+		gui.runGUI(args);
 	}
 
 }
