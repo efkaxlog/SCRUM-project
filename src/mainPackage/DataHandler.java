@@ -56,13 +56,6 @@ public class DataHandler {
 	public void handleObject(String dataString, boolean isDataFromArduino) {
 		Sensor sensor = makeSensor(dataString, isDataFromArduino);
 		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
-//		try {
-//			database.insertSensorIntoTable(makeSensor(dataString, isDataFromArduino));
-//		} catch (SQLException e) {
-//			System.out.println("Failed to insert sensor into table.");
-//			System.out.println("Data string: " + dataString);
-//			e.printStackTrace();
-//		}
 	}
 
 	public Sensor makeSensor(String dataString, boolean isDataFromArduino) {
