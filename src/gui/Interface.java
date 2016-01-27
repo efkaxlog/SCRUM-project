@@ -45,6 +45,7 @@ import java.util.Calendar;
 
 public class Interface extends Application {
 
+
 	Scene scene;
 	Pane root, sessionPane, historicalPane; // Pane for main tab
 	Pane heatFluxPane, externalTempPane, airTempPane; // Pane for sub tabs
@@ -69,6 +70,7 @@ public class Interface extends Application {
 	ScatterChart<Number, Number> heatFluxChart;
 	ScatterChart<Number, Number> externalTempChart;
 	ScatterChart<Number, Number> airTempChart;
+
 	CheckBox heatFluxCheckAirTemp, heatFluxCheckSurfaceTemp, heatFluxCheckFlux;
 	CheckBox externalTempCheckAirTemp, externalTempCheckSurfaceTemp;
 	CheckBox airTempCheckAirTemp, airTempCheckSurfaceTemp;
@@ -214,6 +216,7 @@ public class Interface extends Application {
 		stop.setText("Stop");
 		stop.setLayoutX(150);
 		stop.setLayoutY(10);
+
 		stop.setPrefWidth(100);
 		sessionPane.getChildren().add(stop);
 		stop.setOnAction(new EventHandler<ActionEvent>() {
@@ -351,6 +354,7 @@ public class Interface extends Application {
 		historicalPane.getChildren().addAll(startTextField, endTextField, search);
 
 		stage.show();
+
 	}
 	
 		
@@ -370,6 +374,7 @@ public class Interface extends Application {
 	
 
 	@SuppressWarnings("rawtypes")
+
 	public void drawChart(ObservableList<Sensor> tableData) {
 		heatFluxChart.getData().clear();
 		XYChart.Series series = new XYChart.Series();
@@ -384,6 +389,7 @@ public class Interface extends Application {
 		}
 		heatFluxChart.getData().add(series);
 		// heatFluxChart.getData().add(series2);
+
 
 	}
 
