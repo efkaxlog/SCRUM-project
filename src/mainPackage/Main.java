@@ -15,14 +15,16 @@ public class Main {
 	 */
 	
 	public Main() {
-		 gui = new Interface();
-		 gui.launch(gui.getClass());
+//		 gui = new Interface();
+//		 gui.launch(gui.getClass());
+		
 	}
 	
 	
 	
 	public static void main(String[] args) {
-		Main main = new Main();
+		Test test = new Test();
+		test.testExportingToCSV();
 	}
 
 }

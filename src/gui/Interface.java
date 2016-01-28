@@ -40,7 +40,7 @@ public class Interface extends Application {
 	
 	Scene scene;
 	Pane root, sessionPane, historicalPane; // Pane for main tab
-	Pane heatFluxPane, extTempPane, intTempPane; // Pane for sub tabs
+	Pane heatFluxPane, extTempPane, intTempPane; // Panes for sub tabs
 	static TableView heatFluxTable;
 	static TableView extTempTable;
 	static TableView intTempTable;
@@ -97,6 +97,27 @@ public class Interface extends Application {
 		});
 		return menuBar;
 	}
+	
+	private EventHandler checkBoxHandler = new EventHandler<ActionEvent>(){
+
+		@Override
+		public void handle(ActionEvent event) {
+			if (event.getSource() instanceof CheckBox) {
+				CheckBox cb = (CheckBox) event.getSource();
+				if (cb == heatFluxCB) {
+					if (cb.isSelected()) {
+						heatFluxChartData.setData(heatFluxTableData);
+					}
+					else {
+						heatFluxChartData.getData().clear();
+					}
+				}
+				else {
+					System.out.println("Something else");
+				}
+			}
+		}
+	};
 		
 
 	@Override
@@ -205,20 +226,27 @@ public class Interface extends Application {
 		createAndPlaceCharts();
 		
 		intAirTempCB = new CheckBox("Air Temperature");
+		intAirTempCB.setOnAction(checkBoxHandler);
 		intAirTempCB.setSelected(true);
 		intSurfaceTempCB = new CheckBox("Surface Temperature");
+		intSurfaceTempCB.setOnAction(checkBoxHandler);
 		intSurfaceTempCB.setSelected(true);
 		
 		extAirTempCB = new CheckBox("Air Temperature");
+		extAirTempCB.setOnAction(checkBoxHandler);
 		extAirTempCB.setSelected(true);
 		extSurfaceTempCB = new CheckBox("Surface Temperature");
+		extSurfaceTempCB.setOnAction(checkBoxHandler);
 		extSurfaceTempCB.setSelected(true);
 		
 		heatFluxCB = new CheckBox("Heat Flux Data");
+		heatFluxCB.setOnAction(checkBoxHandler);
 		heatFluxCB.setSelected(true);
 		heatFluxAirTempCB = new CheckBox("Air Temperature");
+		heatFluxAirTempCB.setOnAction(checkBoxHandler);
 		heatFluxAirTempCB.setSelected(true);
 		heatFluxSurfaceTempCB = new CheckBox("Surface Temperature");
+		heatFluxSurfaceTempCB.setOnAction(checkBoxHandler);
 		heatFluxSurfaceTempCB.setSelected(true);
 		
 		heatFluxCheckBoxesPane = new FlowPane(javafx.geometry.Orientation.VERTICAL);
@@ -345,7 +373,7 @@ public class Interface extends Application {
 		extTempChart.getData().add(extTempSensorSurfaceTempData);
 		
 
-
+		
 		heatFluxPane.getChildren().add(heatFluxChart);
 		intTempPane.getChildren().add(intTempChart);
 		extTempPane.getChildren().add(extTempChart);

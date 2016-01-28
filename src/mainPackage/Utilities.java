@@ -1,9 +1,15 @@
 package mainPackage;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import sensors.HeatFluxSensor;
+import sensors.Sensor;
 
 public abstract class Utilities {
 
@@ -32,5 +38,42 @@ public abstract class Utilities {
 			e.printStackTrace();
 		}
 		return timestamp;
+	}
+	
+	private static ArrayList<String> prepareSensorDataForCsv(ArrayList<Sensor> sensors) {
+		ArrayList<String> dataStrings = new ArrayList<String>();
+		for (Sensor s : sensors) {
+			StringBuilder sb = new StringBuilder();
+			String dataString = "";
+			sb.append(
+					s.getTimestamp() + "," + s.getSensorID() + "," + 
+					s.getSensorName() + "," + s.getSensorType() + "," +
+					s.getAirTemp() + "," + s.getSurfaceTemp());
+			if (s.getSensorType().equals("HFT")) {
+				HeatFluxSensor hfs = (HeatFluxSensor) s;
+				sb.append("," + hfs.getHeatFluxData());
+			}
+			dataString = sb.toString();
+			System.out.println(dataString);
+			dataStrings.add(dataString);
+		}
+		return dataStrings;	
+	}
+	
+	public static void exportToCsv(ArrayList<Sensor> sensors, String filePath) {
+		ArrayList<String> dataStrings = prepareSensorDataForCsv(sensors);
+		try {
+			FileWriter writer = new FileWriter(filePath);
+			for (String data : dataStrings) {
+				writer.append(data);
+				writer.append("\n");
+			}
+			writer.flush();
+			writer.close();
+		}
+		catch (IOException e) {
+			System.out.println("Error while exporting to CSV");
+			e.printStackTrace();
+		}
 	}
 }
