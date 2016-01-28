@@ -1,6 +1,7 @@
 package database;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -11,6 +12,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * @author SPAT Group 1
+ * @version 1.2
+ */
 public class FlatFileDatabase {
 	
 	private HashMap<String, String> fileNames;
@@ -21,12 +26,20 @@ public class FlatFileDatabase {
 		setUpFileNames();
 	}
 	
+	/**
+	 * add description here
+	 */
 	private void setUpFileNames() {
 		fileNames.put("heat_flux1", "Heat Flux Data.txt");
 		fileNames.put("Int Temp", "Internal Temp Data.txt");
 		fileNames.put("Ext Temp", "External Temp Data.txt");
 	}
 	
+	/**
+	 * add description here
+	 * @param sensorName
+	 * @return File path of the new file
+	 */
 	private String getSensorFilepath(String sensorName) {
 		String filename = dataFolder + fileNames.get(sensorName);
 		File file = new File(filename);
@@ -44,6 +57,11 @@ public class FlatFileDatabase {
 		return file.getAbsolutePath();
 	}
 	
+	/**
+	 * add description here
+	 * @param sensorName
+	 * @param sensorStrings
+	 */
 	public void addSensorStrings(String sensorName, ArrayList<String> sensorStrings) {
 		if (sensorName.equals("all")) {
 			Collection<String> c = fileNames.keySet();
@@ -57,6 +75,11 @@ public class FlatFileDatabase {
 		}
 	}
 
+	/**
+	 * Read a data file containing sensor information.
+	 * @param sensorName
+	 * @param sensorStrings
+	 */
 	public void addSensorsStringsFromFile(String sensorName, ArrayList<String> sensorStrings) {
 		try {
 			File sensorFile = new File(getSensorFilepath(sensorName));
@@ -72,6 +95,11 @@ public class FlatFileDatabase {
 		}
 	}
 	
+	/**
+	 * Write the sensor data to a file.
+	 * @param sensorName
+	 * @param data
+	 */
 	public void insertSensorData(String sensorName, String data) {
 		String timestamp = mainPackage.Utilities.getCurrentTimestamp().toString();
 		String sensorFilepath = getSensorFilepath(sensorName);
@@ -83,7 +111,6 @@ public class FlatFileDatabase {
 			writer.write("\r\n"); // write new line
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

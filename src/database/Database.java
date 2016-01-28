@@ -14,28 +14,35 @@ import java.util.Iterator;
 import sensors.HeatFluxSensor;
 import sensors.Sensor;
 import sensors.TemperatureSensor;
-
-public class Database {
+/**
+ * @author SPAT Group 1
+ * @version 1.2
+ */
+public class Database 
+{
 	static Connection connection;
 	HashMap<String, String> sensorTables = new HashMap<String, String>();
 
-	public Database() {
+	public Database() 
+	{
 		String DRIVER_CLASS = "com.mysql.jdbc.Driver";
 		// helios credentials
 		String url = "jdbc:mysql://helios.csesalford.com/sta302_spat";
 		String user = "sta302";
 		String pass = "Fosters2003";
-		try {
+		try 
+		{
 			Class.forName(DRIVER_CLASS);
 			connection = DriverManager.getConnection(url, user, pass);
-		} catch (SQLException sqlException) {
+		} catch (SQLException sqlException) 
+		{
 			sqlException.printStackTrace();
 			System.exit(1);
-		} catch (Exception exception) {
+		} catch (Exception exception) 
+		{
 			System.err.println("Cannot load " + DRIVER_CLASS);
 			System.exit(1);
 		}
-
 		// populates sensorTables hashMap with DB table names
 		setupHashMapTables();
 	}
@@ -43,7 +50,8 @@ public class Database {
 	/**
 	 * populates sensorTables with names of the tables in the DB
 	 */
-	private void setupHashMapTables() {
+	private void setupHashMapTables() 
+	{
 		sensorTables.put("heat_flux1", "Heat_Flux_Sensor");
 		sensorTables.put("Int Temp", "Air_Temp_Sensor");
 		sensorTables.put("Ext Temp", "External_Temp_Sensor");
@@ -53,26 +61,31 @@ public class Database {
 	 * 
 	 * @return String SQL generated for a particular sensor
 	 */
-	private String generateInsertSQL(Sensor sensor) {
+	private String generateInsertSQL(Sensor sensor) 
+	{
 		String sensorName = sensor.getSensorName();
 		// get DB table name for specific sensor type
 		String tableName = sensorTables.get(sensorName);
 		// SQL for columns which all sensors share
 		String commonSensorColumnsSQL = "(Sensor_ID, Sensor_Type, Sensor_Name, timestamp";
 		String sqlQueryRemainder = "";
-		if (sensorName.equals("heat_flux1")) {
+		if (sensorName.equals("heat_flux1")) 
+		{
 			sqlQueryRemainder = " ,Heat_Flux_Data, Air_Temp_Data, Surface_Temp_Data) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-		} else if (sensorName.equals("Ext Temp")) {
+		} else if (sensorName.equals("Ext Temp")) 
+		{
 			sqlQueryRemainder = ", Surface_Temp_Data, Air_Temp_Data) " + "VALUES (?, ?, ?, ?, ?, ?)";
-		} else if (sensorName.equals("Int Temp")) {
+		} else if (sensorName.equals("Int Temp")) 
+		{
 			sqlQueryRemainder = ", Air_Temp_Data) " + "VALUES (?, ?, ?, ?, ?)";
 		}
-		// glue the SQL togetha m8
+		//glue the SQL together
 		String sqlQuery = "INSERT INTO " + tableName + commonSensorColumnsSQL + sqlQueryRemainder;
 		return sqlQuery;
 	}
 
-	public void insertSensorIntoTable(Sensor sensor) throws SQLException {
+	public void insertSensorIntoTable(Sensor sensor) throws SQLException 
+	{
 		String sqlQuery = generateInsertSQL(sensor);
 		String sensorName = sensor.getSensorName();
 		PreparedStatement ps = connection.prepareStatement(sqlQuery);
