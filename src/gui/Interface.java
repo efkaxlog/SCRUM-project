@@ -10,12 +10,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -29,6 +32,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import mainPackage.ArduinoConnector;
 import sensors.HeatFluxSensor;
@@ -40,15 +44,15 @@ public class Interface extends Application {
 	
 	Scene scene;
 	Pane root, sessionPane, historicalPane; // Pane for main tab
-	Pane heatFluxPane, extTempPane, intTempPane; // Pane for sub tabs
+	FlowPane heatFluxPane, extTempPane, intTempPane; // Pane for sub tabs
 	static TableView heatFluxTable;
 	static TableView extTempTable;
 	static TableView intTempTable;
+	static TableView historicalTable;
 	TabPane mainTabPane, sessionTabPane;
 	Tab sessionTab, historicalTab; // Main tabs at the top
 	Tab heatFluxTab, extTempTab, intTempTab; // tab to the tabpane with the sessionTab
-	Button start, stop, search;
-	TextField startTextField, endTextField;
+	Button start, stop;
 	MenuBar menuBar;
 	
 	
@@ -72,47 +76,31 @@ public class Interface extends Application {
 	static ObservableList<Sensor> heatFluxTableData;
 	static ObservableList<Sensor> intTempTableData;
 	static ObservableList<Sensor> extTempTableData;
-	
-	CheckBox heatFluxCB, heatFluxAirTempCB, heatFluxSurfaceTempCB;
-	CheckBox intAirTempCB, intSurfaceTempCB;
-	CheckBox extAirTempCB, extSurfaceTempCB;
-	
-	FlowPane heatFluxCheckBoxesPane, intTempCheckBoxesPane, extTempCheckBoxesPane;
+	static ObservableList<Sensor> historicalTableData;
 	
 	ArduinoConnector arduino;
 	
-	int sceneWidth = 1250;
-	int sceneHeight = 950;
+	Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 	
-	private MenuBar buildMenuBarWithMenus(final ReadOnlyDoubleProperty menuWidthProperty) {
-		MenuBar menuBar = new MenuBar();
-		Menu fileMenu = new Menu("File");
-
-		MenuItem MINew = new MenuItem("New");
-		fileMenu.getItems().add(MINew);
-		MINew.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				System.out.println("!test");
-			}
-		});
-		return menuBar;
-	}
+	double sceneWidth = screenSize.getWidth();
+	double sceneHeight = screenSize.getHeight();
+	double minSceneWidth = 1280;
+	double minSceneHeight = 600;
 		
-
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Sensor Reading App");
+		stage.setFullScreen(true);
+		stage.setMinWidth(minSceneWidth);
+		stage.setMinHeight(minSceneHeight);
+				
 		root = new Pane();
 		scene = new Scene(root, sceneWidth, sceneHeight, Color.WHEAT);
 		
 		mainTabPane = new TabPane();
 		
-		mainTabPane.setLayoutY(29);
 		mainTabPane.setPrefWidth(scene.getWidth());
 		
-		menuBar = buildMenuBarWithMenus(stage.widthProperty());
-		
-		root.getChildren().add(menuBar);
 		root.getChildren().add(mainTabPane);
 
 		// Session tab
@@ -170,15 +158,17 @@ public class Interface extends Application {
 		intTempTable = createSensorTable("Int Temp");
 		
 		heatFluxPane = new FlowPane();
+		heatFluxPane.setPadding(new Insets(10, 10, 10, 10));
 		extTempPane = new FlowPane();
+		extTempPane.setPadding(new Insets(10, 10, 10, 10));
 		intTempPane = new FlowPane();
+		intTempPane.setPadding(new Insets(10, 10, 10, 10));
 		
 		heatFluxPane.getChildren().add(heatFluxTable);
 		extTempPane.getChildren().add(extTempTable);
 		intTempPane.getChildren().add(intTempTable);
 		
 		sessionTabPane = new TabPane();
-		sessionTabPane.setLayoutX(0);
 		sessionTabPane.setLayoutY(50);
 		sessionTabPane.setPrefWidth(scene.getWidth());
 		
@@ -204,38 +194,6 @@ public class Interface extends Application {
 		
 		createAndPlaceCharts();
 		
-		intAirTempCB = new CheckBox("Air Temperature");
-		intAirTempCB.setSelected(true);
-		intSurfaceTempCB = new CheckBox("Surface Temperature");
-		intSurfaceTempCB.setSelected(true);
-		
-		extAirTempCB = new CheckBox("Air Temperature");
-		extAirTempCB.setSelected(true);
-		extSurfaceTempCB = new CheckBox("Surface Temperature");
-		extSurfaceTempCB.setSelected(true);
-		
-		heatFluxCB = new CheckBox("Heat Flux Data");
-		heatFluxCB.setSelected(true);
-		heatFluxAirTempCB = new CheckBox("Air Temperature");
-		heatFluxAirTempCB.setSelected(true);
-		heatFluxSurfaceTempCB = new CheckBox("Surface Temperature");
-		heatFluxSurfaceTempCB.setSelected(true);
-		
-		heatFluxCheckBoxesPane = new FlowPane(javafx.geometry.Orientation.VERTICAL);
-		heatFluxCheckBoxesPane.setVgap(30);	
-		heatFluxCheckBoxesPane.getChildren().addAll(heatFluxCB, heatFluxAirTempCB, heatFluxSurfaceTempCB);
-		heatFluxPane.getChildren().add(heatFluxCheckBoxesPane);
-		
-		intTempCheckBoxesPane = new FlowPane(javafx.geometry.Orientation.VERTICAL);
-		intTempCheckBoxesPane.setVgap(30);
-		intTempCheckBoxesPane.getChildren().addAll(intAirTempCB, intSurfaceTempCB);
-		intTempPane.getChildren().add(intTempCheckBoxesPane);
-		
-		extTempCheckBoxesPane = new FlowPane(javafx.geometry.Orientation.VERTICAL);
-		extTempCheckBoxesPane.setVgap(30);
-		extTempCheckBoxesPane.getChildren().addAll(extAirTempCB, extSurfaceTempCB);
-		extTempPane.getChildren().add(extTempCheckBoxesPane);
-		
 		heatFluxTableData = FXCollections.observableArrayList();
 		intTempTableData = FXCollections.observableArrayList();
 		extTempTableData = FXCollections.observableArrayList();
@@ -249,6 +207,17 @@ public class Interface extends Application {
 		addSensor(hfs);
 		addSensor(hfs2);*/
 		
+		//<---Code within the historical data tab--->
+		historicalTable = createSensorTable("HFT");
+		historicalTable.setLayoutX(20);
+		historicalTable.setLayoutY(20);
+		historicalTable.setPrefWidth(650);
+		 
+		historicalTable = createSensorTable("HFT");
+		historicalTableData = FXCollections.observableArrayList();
+		historicalTable.setItems(historicalTableData);
+		historicalPane.getChildren().addAll(historicalTable);
+		//historicalPane.setPadding(new Insets(10, 10, 10, 10));
 		
 		stage.setScene(scene);
 		stage.show();
@@ -266,7 +235,7 @@ public class Interface extends Application {
 			//update table
 			heatFluxTableData.add(sensor);
 			heatFluxTable.setItems(heatFluxTableData);
-			// update chart
+			
 			HeatFluxSensor s = (HeatFluxSensor) sensor;
 			heatFluxChartData.getData().add(new XYChart.Data(second, s.getHeatFluxData()));
 			heatFluxAirTempChartData.getData().add(new XYChart.Data(second, s.getAirTemp()));
@@ -288,6 +257,7 @@ public class Interface extends Application {
 			extTempSensorSurfaceTempData.getData().add(new XYChart.Data(second, s.getSurfaceTemp()));
 			
 		}
+		historicalTableData.add(sensor);
 		currentSessionSensors.add(sensor);
 		return null;
 		
@@ -354,22 +324,28 @@ public class Interface extends Application {
 	public TableView createSensorTable(String sensorType) {
 		TableView<Sensor> table = new TableView<Sensor>();
 		TableColumn sensorIDColumn = new TableColumn("Sensor ID");
+		sensorIDColumn.setPrefWidth(100);
 		sensorIDColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorID"));
 		TableColumn sensorNameColumn = new TableColumn("Name");
 		sensorNameColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorName"));
 		TableColumn sensorTimestampColumn = new TableColumn("Date/time");
+		sensorTimestampColumn.setPrefWidth(100);
 		sensorTimestampColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("timestamp"));
 		TableColumn sensorAirTempColumn = new TableColumn("Air temperature");
+		sensorAirTempColumn.setPrefWidth(140);
 		sensorAirTempColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("airTemp"));
 		TableColumn sensorSurfaceTempColumn = new TableColumn("Surface temperature");
+		sensorSurfaceTempColumn.setPrefWidth(170);
 		sensorSurfaceTempColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("surfaceTemp"));
 		table.getColumns().addAll(sensorIDColumn, sensorNameColumn, sensorTimestampColumn,
 				sensorAirTempColumn, sensorSurfaceTempColumn);
 		if (sensorType.equals("HFT")) {
 			TableColumn sensorHeatFluxDataColumn = new TableColumn("Heat Flux data");
+			sensorHeatFluxDataColumn.setPrefWidth(130);
 			sensorHeatFluxDataColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("heatFluxData"));
 			table.getColumns().add(sensorHeatFluxDataColumn);
 		}
+		//table.setPrefHeight(sceneHeight - );
 		return table;
 	}
 	
