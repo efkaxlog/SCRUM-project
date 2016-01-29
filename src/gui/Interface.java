@@ -1,9 +1,11 @@
 package gui;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import com.sun.webkit.Utilities;
+
 import javafx.application.Application;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,20 +17,16 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import mainPackage.ArduinoConnector;
@@ -84,25 +82,13 @@ public class Interface extends Application {
 	double sceneHeight = screenSize.getHeight();
 	double minSceneWidth = 1280;
 	double minSceneHeight = 600;
-	private MenuBar buildMenuBarWithMenus(final ReadOnlyDoubleProperty menuWidthProperty) {
-		MenuBar menuBar = new MenuBar();
-		Menu fileMenu = new Menu("File");
-
-		MenuItem MINew = new MenuItem("New");
-		fileMenu.getItems().add(MINew);
-		MINew.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				System.out.println("!test");
-			}
-		});
-		return menuBar;
-	}
-
+	
+	boolean isSessionRunning;
 		
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Sensor Reading App");
-		stage.setFullScreen(true);
+	//	stage.setFullScreen(true);
 		stage.setMinWidth(minSceneWidth);
 		stage.setMinHeight(minSceneHeight);
 				
@@ -145,8 +131,15 @@ public class Interface extends Application {
 		sessionPane.getChildren().add(start);
 		start.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				arduino.run();
-				System.out.println("Arduino started");		
+				if (!isSessionRunning) {
+					arduino.run();
+					start.setDisable(true);
+					stop.setDisable(false);
+					isSessionRunning = true;
+					System.out.println("Arduino started");
+				}
+				
+						
 			}
 		});
 
@@ -155,13 +148,19 @@ public class Interface extends Application {
 		stop.setText("Stop");
 		stop.setLayoutX(150);
 		stop.setLayoutY(10);
-
+		stop.setDisable(true);
+		
 		stop.setPrefWidth(100);
 		sessionPane.getChildren().add(stop);
 		stop.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				arduino.close();
-				System.out.println("Stop executed");
+				if (isSessionRunning) {
+					arduino.close();
+					stop.setDisable(true);
+					start.setDisable(false);
+					isSessionRunning = false;
+					System.out.println("Stop executed");
+				}
 			}
 		});
 		
@@ -228,23 +227,32 @@ public class Interface extends Application {
 		exportBtn.setLayoutX(760);
 		exportBtn.setLayoutY(20);
 		exportBtn.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				//add csv export method here	
+			public void handle(ActionEvent event) {
+				FileChooser fc = new FileChooser();
+				fc.setTitle("Export to CSV");
+				File file = fc.showSaveDialog(stage);
+				if (file != null) {
+					try {
+						mainPackage.Utilities.exportToCsv(currentSessionSensors, file);
+					}
+					catch (Exception e) {
+						System.out.println("Failed to export to CSV");
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 		
 		historicalPane.getChildren().addAll(historicalTable, exportBtn);
 		
 		//Table scaling
-		heatFluxTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		/*heatFluxTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
 		intTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
 		extTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());
+		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());*/
 		
 		stage.setScene(scene);
 		stage.show();
-		
-		
 	}
 	
 	/**
@@ -281,9 +289,7 @@ public class Interface extends Application {
 		}
 		historicalTableData.add(sensor);
 		currentSessionSensors.add(sensor);
-		return null;
-		
-		
+		return null;	
 	}
 	
 	public void createAndPlaceCharts() {

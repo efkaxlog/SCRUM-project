@@ -1,4 +1,5 @@
 package mainPackage;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import sensors.*;
@@ -13,7 +14,7 @@ public class Test {
 	
 	public void testExportingToCSV() {
 		ArrayList<Sensor> sensors = getSensors("all");
-		Utilities.exportToCsv(sensors, "/home/sta993/testCSV.csv");
+		Utilities.exportToCsv(sensors, new File("/home/sta993/newCSVFile.csv"));
 	}
 	
 	public ArrayList<Sensor> getSensors(String sensorType) {

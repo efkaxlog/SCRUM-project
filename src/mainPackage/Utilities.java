@@ -1,5 +1,6 @@
 package mainPackage;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -60,10 +61,14 @@ public abstract class Utilities {
 		return dataStrings;	
 	}
 	
-	public static void exportToCsv(ArrayList<Sensor> sensors, String filePath) {
+	public static void exportToCsv(ArrayList<Sensor> sensors, File file) {
 		ArrayList<String> dataStrings = prepareSensorDataForCsv(sensors);
 		try {
-			FileWriter writer = new FileWriter(filePath);
+			// add csv extension if the file hasn't got one
+			if (!file.getName().endsWith(".csv")) {
+				file = new File(file.getAbsolutePath() + ".csv");
+			}
+			FileWriter writer = new FileWriter(file);
 			for (String data : dataStrings) {
 				writer.append(data);
 				writer.append("\n");
