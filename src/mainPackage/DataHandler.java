@@ -93,7 +93,6 @@ public class DataHandler {
 		}
 		sensor.setTimestamp(ts);
 		scanner.close();
-		sensor.printDetails();
 		return sensor;
 	}
 

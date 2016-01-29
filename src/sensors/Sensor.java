@@ -45,6 +45,14 @@ abstract public class Sensor {
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
 	}
+	
+	public abstract float getAirTemp();
+	
+	public abstract void setAirTemp(float airTemp);
+	
+	public abstract float getSurfaceTemp();
+	
+	public abstract void setSurfaceTemp(float surfaceTemp);
 
 	/**
 	 * for debugging and testing

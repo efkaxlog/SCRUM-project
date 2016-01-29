@@ -1,16 +1,23 @@
 package mainPackage;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import database.Database;
 import sensors.*;
 
 public class Test {
 	
 	DataHandler dh = new DataHandler();
 
-	public Test() throws SQLException {
-		testGettingSensorsFromFileDB("all");
+	public Test() {
+		testExportingToCSV();
+	}
+	
+	public void testExportingToCSV() {
+		ArrayList<Sensor> sensors = getSensors("all");
+		Utilities.exportToCsv(sensors, "/home/sta993/testCSV.csv");
+	}
+	
+	public ArrayList<Sensor> getSensors(String sensorType) {
+		return dh.makeSensorsFromFiles(sensorType);
 	}
 	
 	public void testGettingSensorsFromFileDB(String sensorName) {
