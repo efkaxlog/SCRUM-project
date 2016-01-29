@@ -52,7 +52,7 @@ public class Interface extends Application {
 	TabPane mainTabPane, sessionTabPane;
 	Tab sessionTab, historicalTab; // Main tabs at the top
 	Tab heatFluxTab, extTempTab, intTempTab; // tab to the tabpane with the sessionTab
-	Button start, stop;
+	Button start, stop, exportBtn;
 	MenuBar menuBar;
 	
 	
@@ -211,13 +211,30 @@ public class Interface extends Application {
 		historicalTable = createSensorTable("HFT");
 		historicalTable.setLayoutX(20);
 		historicalTable.setLayoutY(20);
-		historicalTable.setPrefWidth(650);
 		 
 		historicalTable = createSensorTable("HFT");
 		historicalTableData = FXCollections.observableArrayList();
 		historicalTable.setItems(historicalTableData);
-		historicalPane.getChildren().addAll(historicalTable);
-		//historicalPane.setPadding(new Insets(10, 10, 10, 10));
+		historicalTable.setLayoutX(20);
+		historicalTable.setLayoutY(20);
+		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());
+		
+		historicalPane.setPadding(new Insets(10, 10, 10, 10));
+		exportBtn = new Button("Export to CSV");
+		exportBtn.setLayoutX(760);
+		exportBtn.setLayoutY(20);
+		exportBtn.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent e) {
+				//add csv export method here	
+			}
+		});
+		
+		historicalPane.getChildren().addAll(historicalTable, exportBtn);
+		
+		//Table scaling
+		heatFluxTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		intTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		extTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
 		
 		stage.setScene(scene);
 		stage.show();
@@ -345,7 +362,7 @@ public class Interface extends Application {
 			sensorHeatFluxDataColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("heatFluxData"));
 			table.getColumns().add(sensorHeatFluxDataColumn);
 		}
-		//table.setPrefHeight(sceneHeight - );
+		
 		return table;
 	}
 	
