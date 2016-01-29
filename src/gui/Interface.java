@@ -49,7 +49,8 @@ public class Interface extends Application {
 	TabPane mainTabPane, sessionTabPane;
 	Tab sessionTab, historicalTab; // Main tabs at the top
 	Tab heatFluxTab, extTempTab, intTempTab; // tab to the tabpane with the sessionTab
-	Button start, stop, exportBtn, clearBtn;
+	Button start, stop, exportBtn;
+	static Button clearBtn;
 	MenuBar menuBar;
 	
 	
@@ -257,9 +258,9 @@ public class Interface extends Application {
 				intTempTableData.clear();
 				historicalTableData.clear();
 				
-				heatFluxChart.getData().clear();
-				extTempChart.getData().clear();
-				intTempChart.getData().clear();
+				heatFluxChart.getData().removeAll();
+				extTempChart.getData().removeAll();
+				intTempChart.getData().removeAll();
 				
 				exportBtn.setDisable(true);
 				clearBtn.setDisable(true);
@@ -270,9 +271,9 @@ public class Interface extends Application {
 		historicalPane.getChildren().addAll(historicalTable, exportBtn, clearBtn);
 		
 		//Table scaling
-		heatFluxTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		intTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		extTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		heatFluxTable.setMinHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		intTempTable.setMinHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		extTempTable.setMinHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
 		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());
 		
 		mainTabPane.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -317,36 +318,37 @@ public class Interface extends Application {
 			intTempTable.setItems(intTempTableData);
 			//update chart
 			TemperatureSensor s = (TemperatureSensor) sensor;
-			intTempSensorAirTempData.getData().add(new XYChart.Data(second, s.getAirTemp()));
-			intTempSensorSurfaceTempData.getData().add(new XYChart.Data(second, s.getSurfaceTemp()));
+			intTempSensorAirTempData.getData().add(new XYChart.Data(graphTime, s.getAirTemp()));
+			intTempSensorSurfaceTempData.getData().add(new XYChart.Data(graphTime, s.getSurfaceTemp()));
 		}  else if (sensor.getSensorName().equals("Ext Temp")) {
 			extTempTableData.add(sensor);
 			extTempTable.setItems(extTempTableData);
 			//update chart
 			TemperatureSensor s = (TemperatureSensor) sensor;
-			extTempSensorAirTempData.getData().add(new XYChart.Data(second, s.getAirTemp()));
-			extTempSensorSurfaceTempData.getData().add(new XYChart.Data(second, s.getSurfaceTemp()));
+			extTempSensorAirTempData.getData().add(new XYChart.Data(graphTime, s.getAirTemp()));
+			extTempSensorSurfaceTempData.getData().add(new XYChart.Data(graphTime, s.getSurfaceTemp()));
 			
 		}
 		historicalTableData.add(sensor);
 		currentSessionSensors.add(sensor);
+		clearBtn.setDisable(true);
 		return null;	
 	}
 	
 	public void createAndPlaceCharts() {
 		heatFluxTimeAxis = new NumberAxis();
 		heatFluxDataAxis = new NumberAxis();
-		heatFluxTimeAxis.setLabel("Time");
+		heatFluxTimeAxis.setLabel("Time (Minutes and Seconds)");
 		heatFluxDataAxis.setLabel("Temperature (ºC)");
 		
 		intTempTimeAxis = new NumberAxis();
 		intTempDataAxis = new NumberAxis();
-		intTempTimeAxis.setLabel("Time");
+		intTempTimeAxis.setLabel("Time (Minutes and Seconds)");
 		intTempDataAxis.setLabel("Temperature (ºC)");
 				
 		extTempTimeAxis = new NumberAxis();
 		extTempDataAxis = new NumberAxis();
-		extTempTimeAxis.setLabel("Time");
+		extTempTimeAxis.setLabel("Time (Minutes and Seconds)");
 		extTempDataAxis.setLabel("Temperature (ºC)");
 		
 		// HEAT FLUX
