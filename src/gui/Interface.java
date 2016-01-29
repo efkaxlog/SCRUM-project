@@ -257,9 +257,12 @@ public class Interface extends Application {
 				intTempTableData.clear();
 				historicalTableData.clear();
 				
-				heatFluxChart.setData(null);
-				extTempChart.setData(null);
-				intTempChart.setData(null);
+				heatFluxChart.getData().clear();
+				extTempChart.getData().clear();
+				intTempChart.getData().clear();
+				
+				exportBtn.setDisable(true);
+				clearBtn.setDisable(true);
 				
 			}
 		});
@@ -296,16 +299,18 @@ public class Interface extends Application {
 	 * @return 
 	 */
 	public static Runnable addSensor(Sensor sensor) {
-		int second = sensor.getTimestamp().getSeconds();
+		double graphTime;
+		int second = ((sensor.getTimestamp().getSeconds() / 100) * 60) / 100;
+		graphTime = sensor.getTimestamp().getMinutes()  + second;
 		if (sensor.getSensorType().equals("HFT")) {
 			//update table
 			heatFluxTableData.add(sensor);
 			heatFluxTable.setItems(heatFluxTableData);
 			
 			HeatFluxSensor s = (HeatFluxSensor) sensor;
-			heatFluxChartData.getData().add(new XYChart.Data(second, s.getHeatFluxData()));
-			heatFluxAirTempChartData.getData().add(new XYChart.Data(second, s.getAirTemp()));
-			heatFluxSurfaceTempChartData.getData().add(new XYChart.Data(second, s.getSurfaceTemp()));
+			heatFluxChartData.getData().add(new XYChart.Data(graphTime, s.getHeatFluxData()));
+			heatFluxAirTempChartData.getData().add(new XYChart.Data(graphTime, s.getAirTemp()));
+			heatFluxSurfaceTempChartData.getData().add(new XYChart.Data(graphTime, s.getSurfaceTemp()));
 		} else if (sensor.getSensorName().equals("Int Temp")) {
 			//update table
 			intTempTableData.add(sensor);
