@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import com.sun.webkit.Utilities;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -47,7 +49,7 @@ public class Interface extends Application {
 	TabPane mainTabPane, sessionTabPane;
 	Tab sessionTab, historicalTab; // Main tabs at the top
 	Tab heatFluxTab, extTempTab, intTempTab; // tab to the tabpane with the sessionTab
-	Button start, stop, exportBtn;
+	Button start, stop, exportBtn, clearBtn;
 	MenuBar menuBar;
 	
 	
@@ -88,7 +90,7 @@ public class Interface extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Sensor Reading App");
-	//	stage.setFullScreen(true);
+		stage.setFullScreen(true);
 		stage.setMinWidth(minSceneWidth);
 		stage.setMinHeight(minSceneHeight);
 				
@@ -96,6 +98,8 @@ public class Interface extends Application {
 		scene = new Scene(root, sceneWidth, sceneHeight, Color.WHEAT);
 		
 		mainTabPane = new TabPane();
+		
+		
 		
 		mainTabPane.setPrefWidth(scene.getWidth());
 		
@@ -224,7 +228,7 @@ public class Interface extends Application {
 		
 		historicalPane.setPadding(new Insets(10, 10, 10, 10));
 		exportBtn = new Button("Export to CSV");
-		exportBtn.setLayoutX(760);
+		exportBtn.setLayoutX(720);
 		exportBtn.setLayoutY(20);
 		exportBtn.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -242,14 +246,46 @@ public class Interface extends Application {
 				}
 			}
 		});
+		clearBtn = new Button("Clear Data");
+		clearBtn.setLayoutX(720);
+		clearBtn.setLayoutY(55);
+		clearBtn.setPrefWidth(104);
+		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				heatFluxTableData.clear();
+				extTempTableData.clear();
+				intTempTableData.clear();
+				historicalTableData.clear();
+				
+				heatFluxChart.setData(null);
+				extTempChart.setData(null);
+				intTempChart.setData(null);
+				
+			}
+		});
 		
-		historicalPane.getChildren().addAll(historicalTable, exportBtn);
+		historicalPane.getChildren().addAll(historicalTable, exportBtn, clearBtn);
 		
 		//Table scaling
-		/*heatFluxTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		heatFluxTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
 		intTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
 		extTempTable.setPrefHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());*/
+		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());
+		
+		mainTabPane.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
+		    	if (currentSessionSensors.isEmpty() == false)
+				{
+		    		exportBtn.setDisable(false);
+		    		clearBtn.setDisable(false);
+				} else
+				{
+					exportBtn.setDisable(true);
+					clearBtn.setDisable(true);
+				}
+		    }
+		});
 		
 		stage.setScene(scene);
 		stage.show();
@@ -296,17 +332,17 @@ public class Interface extends Application {
 		heatFluxTimeAxis = new NumberAxis();
 		heatFluxDataAxis = new NumberAxis();
 		heatFluxTimeAxis.setLabel("Time");
-		heatFluxDataAxis.setLabel("Data");
+		heatFluxDataAxis.setLabel("Temperature (ºC)");
 		
 		intTempTimeAxis = new NumberAxis();
 		intTempDataAxis = new NumberAxis();
 		intTempTimeAxis.setLabel("Time");
-		intTempDataAxis.setLabel("Data");
+		intTempDataAxis.setLabel("Temperature (ºC)");
 				
 		extTempTimeAxis = new NumberAxis();
 		extTempDataAxis = new NumberAxis();
 		extTempTimeAxis.setLabel("Time");
-		extTempDataAxis.setLabel("Data");
+		extTempDataAxis.setLabel("Temperature (ºC)");
 		
 		// HEAT FLUX
 		heatFluxChart = new LineChart<Number, Number>(heatFluxTimeAxis, heatFluxDataAxis);
@@ -351,8 +387,8 @@ public class Interface extends Application {
 	
 	public TableView createSensorTable(String sensorType) {
 		TableView<Sensor> table = new TableView<Sensor>();
-		TableColumn sensorIDColumn = new TableColumn("Sensor ID");
-		sensorIDColumn.setPrefWidth(100);
+		TableColumn sensorIDColumn = new TableColumn("ID");
+		sensorIDColumn.setPrefWidth(50);
 		sensorIDColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorID"));
 		TableColumn sensorNameColumn = new TableColumn("Name");
 		sensorNameColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorName"));
