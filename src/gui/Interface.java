@@ -271,10 +271,10 @@ public class Interface extends Application {
 		historicalPane.getChildren().addAll(historicalTable, exportBtn, clearBtn);
 		
 		//Table scaling
-		heatFluxTable.setMinHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		intTempTable.setMinHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		extTempTable.setMinHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
-		historicalTable.setPrefHeight(sceneHeight - mainTabPane.getHeight());
+		heatFluxTable.setMaxHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		intTempTable.setMaxHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		extTempTable.setMaxHeight(sceneHeight - sessionTabPane.getLayoutY() - sessionTabPane.getPrefHeight() - 20);
+		historicalTable.setMaxHeight(sceneHeight - mainTabPane.getHeight());
 		
 		mainTabPane.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 		    @Override
