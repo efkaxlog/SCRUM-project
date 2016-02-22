@@ -3,6 +3,7 @@ package gui;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.sun.javafx.util.TempState;
 import com.sun.webkit.Utilities;
 
 import javafx.application.Application;
@@ -87,9 +88,10 @@ public class Interface extends Application {
 	double minSceneHeight = 600;
 	
 	boolean isSessionRunning;
+	static double lastTimeHftAdded = System.currentTimeMillis();
 		
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(final Stage stage) throws Exception {
 		stage.setTitle("Sensor Reading App");
 		stage.setFullScreen(true);
 		stage.setMinWidth(minSceneWidth);
@@ -136,13 +138,23 @@ public class Interface extends Application {
 		sessionPane.getChildren().add(start);
 		start.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				if (!isSessionRunning) {
-					arduino.run();
-					start.setDisable(true);
-					stop.setDisable(false);
-					isSessionRunning = true;
-					System.out.println("Arduino started");
-				}
+//				if (!isSessionRunning) {
+//					arduino.run();
+//					start.setDisable(true);
+//					stop.setDisable(false);
+//					isSessionRunning = true;
+//					System.out.println("Arduino started");
+//				}
+				HeatFluxSensor hfs = new HeatFluxSensor(001, "heatflux", "HFT", 20, 30, 40);
+				TemperatureSensor intTempS = new TemperatureSensor(002, "Int Temp", "temp", 50, 60);
+				TemperatureSensor extTempS = new TemperatureSensor(003, "Ext Temp", "temp", 80, 90);
+				hfs.setTimestamp(mainPackage.Utilities.getCurrentTimestamp());
+				intTempS.setTimestamp(mainPackage.Utilities.getCurrentTimestamp());
+				extTempS.setTimestamp(mainPackage.Utilities.getCurrentTimestamp());
+				addSensor(hfs);
+				addSensor(extTempS);
+				addSensor(intTempS);
+				
 				
 						
 			}
@@ -258,9 +270,13 @@ public class Interface extends Application {
 				intTempTableData.clear();
 				historicalTableData.clear();
 				
-				heatFluxChart.getData().removeAll();
-				extTempChart.getData().removeAll();
-				intTempChart.getData().removeAll();
+				// autosize() because clear() doesn't refresh the chart. Bug?
+				heatFluxChart.getData().clear();
+				heatFluxChart.autosize();
+				extTempChart.getData().clear();
+				extTempChart.autosize();
+				intTempChart.getData().clear();
+				intTempChart.autosize();
 				
 				exportBtn.setDisable(true);
 				clearBtn.setDisable(true);
@@ -300,9 +316,8 @@ public class Interface extends Application {
 	 * @return 
 	 */
 	public static Runnable addSensor(Sensor sensor) {
-		double graphTime;
-		int second = ((sensor.getTimestamp().getSeconds() / 100) * 60) / 100;
-		graphTime = sensor.getTimestamp().getMinutes()  + second;
+		double graphTime = (System.currentTimeMillis() - lastTimeHftAdded) / 1000 / 3600;
+		
 		if (sensor.getSensorType().equals("HFT")) {
 			//update table
 			heatFluxTableData.add(sensor);
@@ -399,7 +414,7 @@ public class Interface extends Application {
 		sensorIDColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorID"));
 		TableColumn sensorNameColumn = new TableColumn("Name");
 		sensorNameColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("sensorName"));
-		TableColumn sensorTimestampColumn = new TableColumn("Date/time");
+		TableColumn sensorTimestampColumn = new TableColumn("Date/Time");
 		sensorTimestampColumn.setPrefWidth(100);
 		sensorTimestampColumn.setCellValueFactory(new PropertyValueFactory<Sensor, String>("timestamp"));
 		TableColumn sensorAirTempColumn = new TableColumn("Air temperature");

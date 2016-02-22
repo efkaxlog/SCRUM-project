@@ -56,7 +56,7 @@ public class DataHandler {
 	}
 
 	public void handleObject(String dataString, boolean isDataFromArduino) {
-		Sensor sensor = makeSensor(dataString, isDataFromArduino);
+		final Sensor sensor = makeSensor(dataString, isDataFromArduino);
 		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
 		Platform.runLater(new Runnable() {	
 			@Override
