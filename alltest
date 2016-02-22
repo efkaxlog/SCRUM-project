@@ -1,0 +1,19 @@
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+import mainPackage.UtilitiesTest;
+import sensors.HeatFluxSensorTest;
+import sensors.SensorTest;
+import sensors.TemperatureSensorTest;
+
+@RunWith(Suite.class)
+@SuiteClasses({
+	UtilitiesTest.class,
+	HeatFluxSensorTest.class,
+	SensorTest.class,
+	TemperatureSensorTest.class,
+	})
+
+public class AllTests {
+}
+

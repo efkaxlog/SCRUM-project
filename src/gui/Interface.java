@@ -301,7 +301,7 @@ public class Interface extends Application {
 	 */
 	public static Runnable addSensor(Sensor sensor) {
 		double graphTime;
-		int second = ((sensor.getTimestamp().getSeconds() / 100) * 60) / 100;
+		double second = ((sensor.getTimestamp().getSeconds() / 100) * 60) / 100;
 		graphTime = sensor.getTimestamp().getMinutes()  + second;
 		if (sensor.getSensorType().equals("HFT")) {
 			//update table
