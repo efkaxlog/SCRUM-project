@@ -316,8 +316,7 @@ public class Interface extends Application {
 	 * @return 
 	 */
 	public static Runnable addSensor(Sensor sensor) {
-		double graphTime = (System.currentTimeMillis() - lastTimeHftAdded) / 1000 / 3600;
-		
+		double graphTime = (System.currentTimeMillis() - lastTimeHftAdded) / 1000 / 3600;	
 		if (sensor.getSensorType().equals("HFT")) {
 			//update table
 			heatFluxTableData.add(sensor);
