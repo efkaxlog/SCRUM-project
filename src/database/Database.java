@@ -15,6 +15,10 @@ import sensors.HeatFluxSensor;
 import sensors.Sensor;
 import sensors.TemperatureSensor;
 
+/**
+ * @author SPAT Group 1
+ * @version 1.2
+ */
 public class Database {
 	static Connection connection;
 	HashMap<String, String> sensorTables = new HashMap<String, String>();
@@ -35,7 +39,6 @@ public class Database {
 			System.err.println("Cannot load " + DRIVER_CLASS);
 			System.exit(1);
 		}
-
 		// populates sensorTables hashMap with DB table names
 		setupHashMapTables();
 	}
@@ -61,14 +64,17 @@ public class Database {
 		String commonSensorColumnsSQL = "(Sensor_ID, Sensor_Type, Sensor_Name, timestamp";
 		String sqlQueryRemainder = "";
 		if (sensorName.equals("heat_flux1")) {
-			sqlQueryRemainder = " ,Heat_Flux_Data, Air_Temp_Data, Surface_Temp_Data) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+			sqlQueryRemainder = " ,Heat_Flux_Data, Air_Temp_Data, Surface_Temp_Data) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		} else if (sensorName.equals("Ext Temp")) {
-			sqlQueryRemainder = ", Surface_Temp_Data, Air_Temp_Data) " + "VALUES (?, ?, ?, ?, ?, ?)";
+			sqlQueryRemainder = ", Surface_Temp_Data, Air_Temp_Data) "
+					+ "VALUES (?, ?, ?, ?, ?, ?)";
 		} else if (sensorName.equals("Int Temp")) {
 			sqlQueryRemainder = ", Air_Temp_Data) " + "VALUES (?, ?, ?, ?, ?)";
 		}
-		// glue the SQL togetha m8
-		String sqlQuery = "INSERT INTO " + tableName + commonSensorColumnsSQL + sqlQueryRemainder;
+		// glue the SQL together
+		String sqlQuery = "INSERT INTO " + tableName + commonSensorColumnsSQL
+				+ sqlQueryRemainder;
 		return sqlQuery;
 	}
 
@@ -95,7 +101,8 @@ public class Database {
 		ps.executeUpdate();
 	}
 
-	public void addSensorStrings(String tableName, ArrayList<String> sensorStrings) throws SQLException {
+	public void addSensorStrings(String tableName,
+			ArrayList<String> sensorStrings) throws SQLException {
 		if (tableName.equals("all")) {
 			Collection<String> c = sensorTables.values();
 			Iterator<String> itr = c.iterator();
@@ -115,7 +122,8 @@ public class Database {
 	 *             adds delimited, ready for making sensor objects with sensor
 	 *             data strings to an Arraylist passed as an argument
 	 */
-	public void addSensorsStringsFromTable(String tableName, ArrayList<String> sensorStrings) throws SQLException {
+	public void addSensorsStringsFromTable(String tableName,
+			ArrayList<String> sensorStrings) throws SQLException {
 		String sql = "SELECT * FROM " + tableName;
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
@@ -138,7 +146,8 @@ public class Database {
 				sensorDataString = sb.append(value + ",").toString();
 			}
 			// remove last character because it's a comma
-			sensorDataString = mainPackage.Utilities.removeLastChar(sensorDataString);
+			sensorDataString = mainPackage.Utilities
+					.removeLastChar(sensorDataString);
 			sensorStrings.add(sensorDataString);
 
 		}

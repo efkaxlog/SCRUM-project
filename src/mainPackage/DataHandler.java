@@ -1,19 +1,25 @@
 package mainPackage;
 
+import gui.Interface;
+
 import java.sql.SQLException;
 import java.sql.Timestamp;
-//import ArduinoConnection.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import database.Database;
-import database.FlatFileDatabase;
-import gui.Interface;
 import javafx.application.Platform;
 import sensors.HeatFluxSensor;
 import sensors.Sensor;
 import sensors.TemperatureSensor;
+import database.Database;
+import database.FlatFileDatabase;
 
+//import ArduinoConnection.Connection;
+
+/**
+ * @author SPAT Group 1
+ * @version 1.2
+ */
 public class DataHandler {
 	// Connection connection;
 	Database database;
@@ -24,17 +30,22 @@ public class DataHandler {
 		fileDatabase = new FlatFileDatabase();
 	}
 
-	// fetches the data from the database class
+	/**
+	 * Takes data from the database and turns it in to a Sensor object
+	 * 
+	 * @param tableName
+	 * @return values stored within an ArrayList
+	 */
 	public ArrayList<Sensor> makeSensorsFromDB(String tableName) {
 		boolean isDataFromArduino = false;
 		ArrayList<String> sensorDataStrings = new ArrayList<String>();
 		try {
 			database.addSensorStrings(tableName, sensorDataStrings);
 		} catch (SQLException e) {
-			System.out.println("Failed to retrieve sensors data " + "strings from database. (table name: " + tableName);
+			System.out.println("Failed to retrieve sensors data "
+					+ "strings from database. (table name: " + tableName);
 			e.printStackTrace();
 		}
-
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		if (sensorDataStrings != null) {
 			for (String row : sensorDataStrings) {
@@ -43,7 +54,13 @@ public class DataHandler {
 		}
 		return sensors;
 	}
-	
+
+	/**
+	 * add description here
+	 * 
+	 * @param sensorName
+	 * @return values stored within an ArrayList
+	 */
 	public ArrayList<Sensor> makeSensorsFromFiles(String sensorName) {
 		ArrayList<String> sensorDataStrings = new ArrayList<String>();
 		fileDatabase.addSensorStrings(sensorName, sensorDataStrings);
@@ -52,13 +69,19 @@ public class DataHandler {
 		for (String sensorData : sensorDataStrings) {
 			sensors.add(makeSensor(sensorData, isDataFromArduino));
 		}
-		return sensors;	
+		return sensors;
 	}
 
+	/**
+	 * add description here
+	 * 
+	 * @param dataString
+	 * @param isDataFromArduino
+	 */
 	public void handleObject(String dataString, boolean isDataFromArduino) {
 		final Sensor sensor = makeSensor(dataString, isDataFromArduino);
 		fileDatabase.insertSensorData(sensor.getSensorName(), dataString);
-		Platform.runLater(new Runnable() {	
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				Interface.addSensor(sensor);
@@ -66,6 +89,13 @@ public class DataHandler {
 		});
 	}
 
+	/**
+	 * add description here
+	 * 
+	 * @param dataString
+	 * @param isDataFromArduino
+	 * @return values stored within an ArrayList
+	 */
 	public Sensor makeSensor(String dataString, boolean isDataFromArduino) {
 		Sensor sensor;
 		Scanner scanner = new Scanner(dataString);
@@ -78,13 +108,15 @@ public class DataHandler {
 			float heatFluxData = scanner.nextFloat();
 			float surfaceTemp = scanner.nextFloat();
 			float airTemp = scanner.nextFloat();
-			sensor = new HeatFluxSensor(id, sensorName, sensorType, heatFluxData, surfaceTemp, airTemp);
+			sensor = new HeatFluxSensor(id, sensorName, sensorType,
+					heatFluxData, surfaceTemp, airTemp);
 		} else {
 			float airTemp = scanner.nextFloat();
 			float surfaceTemp = scanner.nextFloat();
-			sensor = new TemperatureSensor(id, sensorName, sensorType, airTemp, surfaceTemp);
+			sensor = new TemperatureSensor(id, sensorName, sensorType, airTemp,
+					surfaceTemp);
 		}
-		
+
 		Timestamp ts;
 		if (isDataFromArduino) {
 			ts = Utilities.getCurrentTimestamp();
@@ -95,5 +127,4 @@ public class DataHandler {
 		scanner.close();
 		return sensor;
 	}
-
 }
