@@ -28,12 +28,4 @@ public class Test {
 			s.printDetails();
 		}
 	}
-
-	
-	public void testWrite() throws IOException
-	{
-		Utilities u = new Utilities();
-		u.saveFile();
-		System.out.println("HERE");
-	}
 }
