@@ -132,28 +132,29 @@ public class Interface extends Application {
 		sessionPane.getChildren().add(start);
 		start.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				// if (!isSessionRunning) {
-				// arduino.run();
-				// start.setDisable(true);
-				// stop.setDisable(false);
-				// isSessionRunning = true;
-				// System.out.println("Arduino started");
-				// }
-				HeatFluxSensor hfs = new HeatFluxSensor(001, "heatflux", "HFT",
-						20, 30, 40);
-				TemperatureSensor intTempS = new TemperatureSensor(002,
-						"Int Temp", "temp", 50, 60);
-				TemperatureSensor extTempS = new TemperatureSensor(003,
-						"Ext Temp", "temp", 80, 90);
-				hfs.setTimestamp(mainPackage.Utilities.getCurrentTimestamp());
-				intTempS.setTimestamp(mainPackage.Utilities
-						.getCurrentTimestamp());
-				extTempS.setTimestamp(mainPackage.Utilities
-						.getCurrentTimestamp());
-				addSensor(hfs);
-				addSensor(extTempS);
-				addSensor(intTempS);
-
+				 if (!isSessionRunning) {
+				 arduino.run();
+				 start.setDisable(true);
+				 stop.setDisable(false);
+				 isSessionRunning = true;
+				 System.out.println("Arduino started");
+				 }
+//				HeatFluxSensor hfs = new HeatFluxSensor(001, "heatflux", "HFT",
+//						20, 30, 40);
+//				TemperatureSensor intTempS = new TemperatureSensor(002,
+//						"Int Temp", "temp", 50, 60);
+//				TemperatureSensor extTempS = new TemperatureSensor(003,
+//						"Ext Temp", "temp", 80, 90);
+//				hfs.setTimestamp(mainPackage.Utilities.getCurrentTimestamp());
+//				intTempS.setTimestamp(mainPackage.Utilities
+//						.getCurrentTimestamp());
+//				extTempS.setTimestamp(mainPackage.Utilities
+//						.getCurrentTimestamp());
+//				addSensor(hfs);
+//				addSensor(extTempS);
+//				addSensor(intTempS);
+//
+//			}
 			}
 		});
 
